@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.yukkajian4.ahmad.yukkajian">
+    package="com.mochadwi.yukmengaji">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -16,12 +16,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
-            android:parentActivityName=".MainActivity" />
+            android:name="io.mochadwi.yukmengaji.MainActivity"
+            android:parentActivityName="io.mochadwi.yukmengaji.MainActivity"/>
         <activity
-            android:name=".RegisterActivity"
-            android:parentActivityName=".MainActivity" />
-        <activity android:name=".LoginActivity">
+            android:name="io.mochadwi.yukmengaji.RegisterActivity"
+            android:parentActivityName="io.mochadwi.yukmengaji.MainActivity"/>
+        <activity android:name="io.mochadwi.yukmengaji.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -33,35 +33,35 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDM_iYAKvOOEk9Um9yMLpO84eVnXbZjSSs"/>
 
-        <activity android:name=".SetupActivity" />
+        <activity android:name="io.mochadwi.yukmengaji.SetupActivity"/>
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" /> <!-- optional (needed if default theme has no action bar) -->
         <activity
-            android:name=".PostActivity"
-            android:parentActivityName=".MainActivity" />
-        <activity android:name=".ClickPostActivity" />
+            android:name="io.mochadwi.yukmengaji.PostActivity"
+            android:parentActivityName="io.mochadwi.yukmengaji.MainActivity"/>
+        <activity android:name="io.mochadwi.yukmengaji.ClickPostActivity"/>
         <activity
-            android:name=".Menu.SettingsActivity"
-            android:parentActivityName=".MainActivity" />
-        <activity android:name=".Menu.ProfileActivity" />
+            android:name="io.mochadwi.yukmengaji.Menu.SettingsActivity"
+            android:parentActivityName="io.mochadwi.yukmengaji.MainActivity"/>
+        <activity android:name="io.mochadwi.yukmengaji.Menu.ProfileActivity"/>
         <activity
-            android:name=".Menu.FindFriendsActivity"
-            android:parentActivityName=".MainActivity" />
-        <activity android:name=".CommentsActivity" />
+            android:name="io.mochadwi.yukmengaji.Menu.FindFriendsActivity"
+            android:parentActivityName="io.mochadwi.yukmengaji.MainActivity"/>
+        <activity android:name="io.mochadwi.yukmengaji.CommentsActivity"/>
 
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
         <activity
-            android:name=".ForgotPasswordActivity"
-            android:parentActivityName=".MainActivity" />
-        <activity android:name=".PersonProfilActivity" />
-        <activity android:name=".FriendsActivity" />
+            android:name="io.mochadwi.yukmengaji.ForgotPasswordActivity"
+            android:parentActivityName="io.mochadwi.yukmengaji.MainActivity"/>
+        <activity android:name="io.mochadwi.yukmengaji.PersonProfilActivity"/>
+        <activity android:name="io.mochadwi.yukmengaji.FriendsActivity"/>
         <activity
-            android:name=".ChatActivity"
-            android:parentActivityName=".MainActivity"></activity>
+            android:name="io.mochadwi.yukmengaji.ChatActivity"
+            android:parentActivityName="io.mochadwi.yukmengaji.MainActivity"></activity>
     </application>
 
 </manifest>

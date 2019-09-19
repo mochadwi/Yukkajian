@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:318449505669:android:6dc1769dcaba75fb",
         "android_client_info": {
-          "package_name": "com.yukkajian4.ahmad.yukkajian"
+          "package_name": "com.mochadwi.yukmengaji"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "318449505669-bmir82q77pembibcs1rlhs9d5bglehq2.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.yukkajian4.ahmad.yukkajian",
+            "package_name": "com.mochadwi.yukmengaji",
             "certificate_hash": "2f6a9b21e42e40af74b3a902c9006722467cfec4"
           }
         },
