@@ -8,18 +8,6 @@
     tools:context="io.mochadwi.yukmengaji.LoginActivity">
 
     <TextView
-        android:id="@+id/login_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="80dp"
-        android:text="welcomehome"
-        android:textColor="#CCCCCC"
-        android:textSize="24sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
         android:id="@+id/or_login_with"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -32,8 +20,8 @@
 
     <ImageView
         android:id="@+id/iv_google_signin_button"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
@@ -43,7 +31,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintVertical_chainStyle="packed"
         app:layout_constraintTop_toBottomOf="@+id/or_login_with"
-        app:srcCompat="@drawable/google_icon" />
+        android:src="@drawable/ic_google"/>
 
     <com.google.android.gms.common.SignInButton
         android:id="@+id/google_signin_button"
