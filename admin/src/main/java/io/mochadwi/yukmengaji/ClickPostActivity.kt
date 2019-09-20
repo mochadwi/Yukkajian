@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import com.mochadwi.yukmengaji.R
 import com.squareup.picasso.Picasso
 
 class ClickPostActivity : AppCompatActivity() {

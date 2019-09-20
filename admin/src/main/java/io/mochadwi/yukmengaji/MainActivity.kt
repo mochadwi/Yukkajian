@@ -20,7 +20,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import com.mochadwi.yukmengaji.R
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 import io.mochadwi.yukmengaji.Class.Posts

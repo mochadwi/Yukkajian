@@ -15,11 +15,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.mochadwi.yukmengaji.R
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 import io.mochadwi.yukmengaji.Class.FindFriends
 import io.mochadwi.yukmengaji.PersonProfilActivity
+import io.mochadwi.yukmengaji.R
 
 class FindFriendsActivity : AppCompatActivity() {
 

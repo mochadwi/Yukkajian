@@ -11,7 +11,7 @@
     <string name="login">Login</string>
     <string name="forgetpass">Lupa Kata sandi</string>
     <string name="blmpunyakun">Belum Punya Akun</string>
-    <string name="loginor">Atau Login Dengan</string>
+    <string name="loginor">Login Dengan</string>
     <string name="googlelogin">Google Login</string>
 
     <!--Register Activity String-->

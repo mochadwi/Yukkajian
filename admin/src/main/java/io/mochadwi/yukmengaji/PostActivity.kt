@@ -23,7 +23,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import com.mochadwi.yukmengaji.R
 import io.mochadwi.yukmengaji.Adapter.PlaceArrayAdapter
 import io.mochadwi.yukmengaji.Class.DateDialog
 import java.text.SimpleDateFormat

@@ -14,12 +14,12 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import com.mochadwi.yukmengaji.R
 import com.squareup.picasso.Picasso
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import de.hdodenhof.circleimageview.CircleImageView
 import io.mochadwi.yukmengaji.MainActivity
+import io.mochadwi.yukmengaji.R
 import java.util.*
 
 class SettingsActivity : AppCompatActivity() {

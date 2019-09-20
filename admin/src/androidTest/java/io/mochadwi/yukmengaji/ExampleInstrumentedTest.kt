@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getTargetContext()
 
-        assertEquals("com.mochadwi.yukmengaji", appContext.packageName)
+        assertEquals("io.mochadwi.yukmengaji", appContext.packageName)
     }
 }

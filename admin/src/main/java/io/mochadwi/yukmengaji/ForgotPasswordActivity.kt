@@ -10,7 +10,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.google.firebase.auth.FirebaseAuth
-import com.mochadwi.yukmengaji.R
 
 class ForgotPasswordActivity : AppCompatActivity() {
 

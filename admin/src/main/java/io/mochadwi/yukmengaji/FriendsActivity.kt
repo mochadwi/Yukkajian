@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import com.mochadwi.yukmengaji.R
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 import io.mochadwi.yukmengaji.Class.Friends
