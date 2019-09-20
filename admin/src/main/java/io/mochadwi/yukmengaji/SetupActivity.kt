@@ -1,5 +1,6 @@
 package io.mochadwi.yukmengaji
 
+import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Intent
 import android.net.Uri
@@ -10,8 +11,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
@@ -36,7 +35,7 @@ class SetupActivity : AppCompatActivity() {
 
     private var loadingBar: ProgressDialog? = null
 
-    internal var currentUserID: String
+    lateinit var currentUserID: String
 
     private val mImageUri: Uri? = null
 
@@ -102,19 +101,18 @@ class SetupActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == Gallery_Pick && resultCode == Activity.RESULT_OK && data != null) {
-
             val imageUri = data.data
             CropImage.activity()
                 .setGuidelines(CropImageView.Guidelines.ON)
                 .setAspectRatio(1, 1)
                 .start(this)
-
         }
+
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
 
             val result = CropImage.getActivityResult(data)
 
-            if (resultCode == Activity.RESULT_OK) {
+            if (resultCode == RESULT_OK) {
 
                 loadingBar!!.setTitle("Profile Image")
                 loadingBar!!.setMessage("Please Wait ")
@@ -132,28 +130,29 @@ class SetupActivity : AppCompatActivity() {
                             "Profile Image sucessfully to firebase storage", Toast.LENGTH_SHORT)
                             .show()
 
-                        val downloadUrl = task.result.downloadUrl!!.toString()
+                        filepath.downloadUrl.addOnSuccessListener { downloadUrl ->
+                            UserRef!!.child("profileimage").setValue(downloadUrl)
+                                .addOnCompleteListener { task ->
+                                    if (task.isSuccessful) {
 
-                        UserRef!!.child("profileimage").setValue(downloadUrl)
-                            .addOnCompleteListener { task ->
-                                if (task.isSuccessful) {
+                                        val selfIntent = Intent(this@SetupActivity,
+                                            SetupActivity::class.java)
+                                        startActivity(selfIntent)
 
-                                    val selfIntent = Intent(this@SetupActivity,
-                                        SetupActivity::class.java)
-                                    startActivity(selfIntent)
+                                        Toast.makeText(this@SetupActivity,
+                                            "profile image store to firebase database",
+                                            Toast.LENGTH_SHORT).show()
+                                        loadingBar!!.dismiss()
+                                    } else {
 
-                                    Toast.makeText(this@SetupActivity,
-                                        "profile image store to firebase database",
-                                        Toast.LENGTH_SHORT).show()
-                                    loadingBar!!.dismiss()
-                                } else {
-
-                                    val message = task.exception!!.message
-                                    Toast.makeText(this@SetupActivity, "Error dk tau",
-                                        Toast.LENGTH_SHORT).show()
-                                    loadingBar!!.dismiss()
+                                        val message = task.exception!!.message
+                                        Toast.makeText(this@SetupActivity, "Error dk tau",
+                                            Toast.LENGTH_SHORT).show()
+                                        loadingBar!!.dismiss()
+                                    }
                                 }
-                            }
+                        }
+
                     }
                 }
 
@@ -193,7 +192,7 @@ class SetupActivity : AppCompatActivity() {
             loadingBar!!.show()
             loadingBar!!.setCanceledOnTouchOutside(false)
 
-            val userMap = HashMap()
+            val userMap = HashMap<String, String>()
             userMap.put("username", username)
             userMap.put("fullname", fullname)
             userMap.put("country", country)
@@ -201,25 +200,21 @@ class SetupActivity : AppCompatActivity() {
             userMap.put("gender", "none")
             userMap.put("dob", "none")
             userMap.put("relationshipstatus", "none")
-            UserRef!!.updateChildren(userMap).addOnCompleteListener(object : OnCompleteListener {
-                override fun onComplete(task: Task<*>) {
+            UserRef!!.updateChildren(userMap.toMap()).addOnCompleteListener { task ->
+                if (task.isSuccessful) {
 
-                    if (task.isSuccessful) {
+                    SendUsersToMainActivity()
+                    Toast.makeText(this@SetupActivity, "your account created succesfulyl",
+                        Toast.LENGTH_SHORT).show()
+                    loadingBar!!.dismiss()
+                } else {
 
-                        SendUsersToMainActivity()
-                        Toast.makeText(this@SetupActivity, "your account created succesfulyl",
-                            Toast.LENGTH_SHORT).show()
-                        loadingBar!!.dismiss()
-                    } else {
-
-                        val message = task.exception!!.message
-                        Toast.makeText(this@SetupActivity, "error$message", Toast.LENGTH_SHORT)
-                            .show()
-                        loadingBar!!.dismiss()
-                    }
-
+                    val message = task.exception!!.message
+                    Toast.makeText(this@SetupActivity, "error$message", Toast.LENGTH_SHORT)
+                        .show()
+                    loadingBar!!.dismiss()
                 }
-            })
+            }
 
         }
 

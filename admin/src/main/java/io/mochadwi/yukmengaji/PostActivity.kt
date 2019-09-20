@@ -19,8 +19,6 @@ import com.google.android.gms.location.places.PlaceBuffer
 import com.google.android.gms.location.places.Places
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
@@ -46,34 +44,34 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
     private var PostSpinner: Spinner? = null
     private var mAutocompleteTextView: AutoCompleteTextView? = null
 
-    private var mGoogleApiClient: GoogleApiClient? = null
+    private lateinit var mGoogleApiClient: GoogleApiClient
     private var mPlaceArrayAdapter: PlaceArrayAdapter? = null
     //Batas
 
     //Time Declaration
-    internal var chooseTime: EditText
-    internal var timePickerDialog: TimePickerDialog
-    internal var calendar: Calendar
-    internal var currentHour: Int = 0
-    internal var currentMinute: Int = 0
-    internal var amPm: String
+    private lateinit var chooseTime: EditText
+    private lateinit var timePickerDialog: TimePickerDialog
+    private lateinit var calendar: Calendar
+    private var currentHour: Int = 0
+    private var currentMinute: Int = 0
+    private lateinit var amPm: String
     private var ImageUri: Uri? = null
 
-    private var Description: String? = null
-    private var SpinnerDescription: String? = null
-    private var DatePickerPost: String? = null
-    private var TimePickerPost: String? = null
+    private lateinit var Description: String
+    private lateinit var SpinnerDescription: String
+    private lateinit var DatePickerPost: String
+    private lateinit var TimePickerPost: String
 
     private var PostImagesReference: StorageReference? = null
     private var userRef: DatabaseReference? = null
     private var PostsRef: DatabaseReference? = null
     private var mAuth: FirebaseAuth? = null
 
-    private var saveCurrentDate: String? = null
-    private var saveCurrentTime: String? = null
-    private var postRandomName: String? = null
-    private var downloadUrl: String? = null
-    private var current_user_id: String? = null
+    private lateinit var saveCurrentDate: String
+    private lateinit var saveCurrentTime: String
+    private lateinit var postRandomName: String
+    private lateinit var downloadUrl: String
+    private lateinit var current_user_id: String
 
     private var countPosts: Long = 0
 
@@ -227,10 +225,14 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
         filepath.putFile(ImageUri!!).addOnCompleteListener { task ->
             if (task.isSuccessful) {
 
-                downloadUrl = task.result.downloadUrl!!.toString()
-                Toast.makeText(this@PostActivity, "Image Upload Success", Toast.LENGTH_SHORT).show()
+                filepath.downloadUrl.addOnSuccessListener {
+                    downloadUrl = it.toString()
 
-                SavingInformationToDatabase()
+                    Toast.makeText(this@PostActivity, "Image Upload Success", Toast.LENGTH_SHORT)
+                        .show()
+
+                    SavingInformationToDatabase()
+                }
 
             } else {
 
@@ -272,7 +274,7 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
                     val userFullName = dataSnapshot.child("fullname").value!!.toString()
                     val userProfileImage = dataSnapshot.child("profileimage").value!!.toString()
 
-                    val postMap = HashMap()
+                    val postMap = HashMap<String, String>()
                     postMap.put("uid", current_user_id)
                     postMap.put("date", saveCurrentDate)
                     postMap.put("time", saveCurrentTime)
@@ -283,28 +285,25 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
                     postMap.put("postimage", downloadUrl)
                     postMap.put("profileimage", userProfileImage)
                     postMap.put("fullname", userFullName)
-                    postMap.put("counter", countPosts)
+                    postMap.put("counter", "$countPosts")
 
-                    PostsRef!!.child(current_user_id!! + postRandomName!!).updateChildren(postMap)
-                        .addOnCompleteListener(object : OnCompleteListener {
-                            override fun onComplete(task: Task<*>) {
+                    PostsRef!!.child(current_user_id!! + postRandomName!!)
+                        .updateChildren(postMap.toMap())
+                        .addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
 
-                                if (task.isSuccessful) {
+                                SendUserToMainActivity()
+                                Toast.makeText(this@PostActivity, "Posts Update Succesfully",
+                                    Toast.LENGTH_SHORT).show()
+                                loadingBar!!.dismiss()
+                            } else {
 
-                                    SendUserToMainActivity()
-                                    Toast.makeText(this@PostActivity, "Posts Update Succesfully",
-                                        Toast.LENGTH_SHORT).show()
-                                    loadingBar!!.dismiss()
-                                } else {
-
-                                    val message = task.exception!!.message
-                                    Toast.makeText(this@PostActivity, "Error$message",
-                                        Toast.LENGTH_SHORT).show()
-                                    loadingBar!!.dismiss()
-                                }
-
+                                val message = task.exception!!.message
+                                Toast.makeText(this@PostActivity, "Error$message",
+                                    Toast.LENGTH_SHORT).show()
+                                loadingBar!!.dismiss()
                             }
-                        })
+                        }
 
                 }
 
@@ -329,7 +328,7 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == Gallery_Pick && resultCode == Activity.RESULT_OK && data != null) {
+        if (requestCode == Gallery_Pick && resultCode == RESULT_OK && data != null) {
 
             ImageUri = data.data
             SelectPostImage!!.setImageURI(ImageUri)

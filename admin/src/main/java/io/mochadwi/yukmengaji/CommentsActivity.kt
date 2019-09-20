@@ -11,8 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.database.FirebaseRecyclerAdapter
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.mochadwi.yukmengaji.R
@@ -31,7 +29,7 @@ class CommentsActivity : AppCompatActivity() {
     private var mAuth: FirebaseAuth? = null
 
     private var Post_Key: String? = null
-    private var current_user_id: String? = null
+    private lateinit var current_user_id: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -157,19 +155,14 @@ class CommentsActivity : AppCompatActivity() {
 
             val RandomKey = current_user_id + saveCurrentDate + saveCurrentTime
 
-            val commentsMap = HashMap()
+            val commentsMap = HashMap<String, String>()
             commentsMap.put("uid", current_user_id)
             commentsMap.put("comment", commentText)
             commentsMap.put("date", saveCurrentDate)
             commentsMap.put("time", saveCurrentTime)
             commentsMap.put("username", userName)
 
-            PostsRef!!.child(RandomKey).updateChildren(commentsMap)
-                .addOnCompleteListener(object : OnCompleteListener {
-                    override fun onComplete(task: Task<*>) {
-
-                    }
-                })
+            PostsRef!!.child(RandomKey).updateChildren(commentsMap.toMap())
         }
     }
 }

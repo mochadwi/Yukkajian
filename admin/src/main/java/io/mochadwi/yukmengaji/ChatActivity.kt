@@ -25,27 +25,27 @@ import java.util.*
 
 class ChatActivity : AppCompatActivity() {
 
-    private var Chattoolbar: Toolbar? = null
-    private var SendMessageButton: ImageButton? = null
-    private var SendImagefileButton: ImageButton? = null
-    private var userMessageInput: EditText? = null
-    private var userMessageList: RecyclerView? = null
+    private lateinit var Chattoolbar: Toolbar
+    private lateinit var SendMessageButton: ImageButton
+    private lateinit var SendImagefileButton: ImageButton
+    private lateinit var userMessageInput: EditText
+    private lateinit var userMessageList: RecyclerView
 
     private val messagesList = ArrayList<Messages>()
-    private var linearLayoutManager: LinearLayoutManager? = null
-    private var messagesAdapter: MessagesAdapter? = null
+    private lateinit var linearLayoutManager: LinearLayoutManager
+    private lateinit var messagesAdapter: MessagesAdapter
 
-    private var messageReceiverID: String? = null
-    private var messageReceiverName: String? = null
-    private var messageSenderID: String? = null
-    private var saveCurrentDate: String? = null
-    private var saveCurrentTime: String? = null
+    private lateinit var messageReceiverID: String
+    private lateinit var messageReceiverName: String
+    private lateinit var messageSenderID: String
+    private lateinit var saveCurrentDate: String
+    private lateinit var saveCurrentTime: String
 
-    private var receiverName: TextView? = null
-    private var receiverProfileImage: CircleImageView? = null
+    private lateinit var receiverName: TextView
+    private lateinit var receiverProfileImage: CircleImageView
 
-    private var RootRef: DatabaseReference? = null
-    private var mAuth: FirebaseAuth? = null
+    private lateinit var RootRef: DatabaseReference
+    private lateinit var mAuth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,18 +73,18 @@ class ChatActivity : AppCompatActivity() {
 
         RootRef!!.child("Messages").child(messageSenderID!!).child(messageReceiverID!!)
             .addChildEventListener(object : ChildEventListener {
-                override fun onChildAdded(dataSnapshot: DataSnapshot, s: String) {
+                override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
 
                     if (dataSnapshot.exists()) {
 
                         val messages = dataSnapshot.getValue<Messages>(Messages::class.java)
-                        messagesList.add(messages)
+                        messagesList.add(messages!!)
                         messagesAdapter!!.notifyDataSetChanged()
 
                     }
                 }
 
-                override fun onChildChanged(dataSnapshot: DataSnapshot, s: String) {
+                override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) {
 
                 }
 
@@ -92,7 +92,7 @@ class ChatActivity : AppCompatActivity() {
 
                 }
 
-                override fun onChildMoved(dataSnapshot: DataSnapshot, s: String) {
+                override fun onChildMoved(dataSnapshot: DataSnapshot, s: String?) {
 
                 }
 
@@ -129,37 +129,33 @@ class ChatActivity : AppCompatActivity() {
             val currentTime = SimpleDateFormat("HH:mm")
             saveCurrentTime = currentTime.format(calForDate.time)
 
-            val messageTextBody = HashMap()
+            val messageTextBody = mutableMapOf<String, String>()
             messageTextBody.put("message", messageText)
             messageTextBody.put("time", saveCurrentTime)
             messageTextBody.put("date", saveCurrentDate)
             messageTextBody.put("type", "text")
             messageTextBody.put("from", messageSenderID)
 
-            val messageBodyDetails = HashMap()
+            val messageBodyDetails = mutableMapOf<String, MutableMap<String, String>>()
             messageBodyDetails.put("$message_sender_ref/$message_push_id", messageTextBody)
             messageBodyDetails.put("$message_receiver_ref/$message_push_id", messageTextBody)
 
-            RootRef!!.updateChildren(messageBodyDetails)
-                .addOnCompleteListener(object : OnCompleteListener {
-                    override fun onComplete(task: Task<*>) {
+            RootRef!!.updateChildren(messageBodyDetails.toMap())
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
 
-                        if (task.isSuccessful) {
+                        Toast.makeText(this@ChatActivity, "Send Message succesfully",
+                            Toast.LENGTH_SHORT).show()
+                        userMessageInput!!.setText("")
 
-                            Toast.makeText(this@ChatActivity, "Send Message succesfully",
-                                Toast.LENGTH_SHORT).show()
-                            userMessageInput!!.setText("")
+                    } else {
 
-                        } else {
-
-                            val message = task.exception!!.message
-                            Toast.makeText(this@ChatActivity, "Error$message", Toast.LENGTH_SHORT)
-                                .show()
-                            userMessageInput!!.setText("")
-                        }
-
+                        val message = task.exception!!.message
+                        Toast.makeText(this@ChatActivity, "Error$message", Toast.LENGTH_SHORT)
+                            .show()
+                        userMessageInput!!.setText("")
                     }
-                })
+                }
 
         }
     }

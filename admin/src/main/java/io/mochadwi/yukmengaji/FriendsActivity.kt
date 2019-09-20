@@ -63,7 +63,7 @@ class FriendsActivity : AppCompatActivity() {
 
                 viewHolder.setDate(model.date)
 
-                val userIDs = getRef(position).key
+                val userIDs = getRef(position).key ?: "userIDs"
 
                 UsersRef!!.child(userIDs).addValueEventListener(object : ValueEventListener {
                     override fun onDataChange(dataSnapshot: DataSnapshot) {

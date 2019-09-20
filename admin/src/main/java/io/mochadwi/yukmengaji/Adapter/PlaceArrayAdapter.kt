@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit
 
 class PlaceArrayAdapter(
     context: Context, resource: Int, private val mBounds: LatLngBounds,
-    private val mPlaceFilter: AutocompleteFilter
+    private val mPlaceFilter: AutocompleteFilter?
 ) : ArrayAdapter<PlaceArrayAdapter.PlaceAutocomplete>(context, resource), Filterable {
 
     private var mGoogleApiClient: GoogleApiClient? = null
@@ -68,12 +68,11 @@ class PlaceArrayAdapter(
 
     private fun getPredictions(constraint: CharSequence?): ArrayList<PlaceAutocomplete>? {
 
-        if (mGoogleApiClient != null) {
-
+        mGoogleApiClient?.let {
             Log.i(TAG, "Executing autocomplete query for: " + constraint!!)
 
             val results = Places.GeoDataApi
-                .getAutocompletePredictions(mGoogleApiClient, constraint.toString(),
+                .getAutocompletePredictions(it, constraint.toString(),
                     mBounds, mPlaceFilter)
 
             // Wait for predictions, set the timeout.
@@ -93,11 +92,13 @@ class PlaceArrayAdapter(
             Log.i(TAG, "Query completed. Received " + autocompletePredictions.count
                 + " predictions.")
             val iterator = autocompletePredictions.iterator()
-            val resultList = ArrayList(autocompletePredictions.count)
+            val resultList = ArrayList<PlaceAutocomplete>(autocompletePredictions.count)
             while (iterator.hasNext()) {
-                val prediction = iterator.next()
-                resultList.add(PlaceAutocomplete(prediction.placeId,
-                    prediction.getFullText(null)))
+                iterator.next()?.let { prediction ->
+                    resultList.add(
+                        PlaceAutocomplete(prediction.placeId ?: "",
+                            prediction.getFullText(null) ?: ""))
+                }
             }
             // Buffer release
             autocompletePredictions.release()
@@ -109,7 +110,7 @@ class PlaceArrayAdapter(
     }
 
     inner class PlaceAutocomplete internal constructor(
-        var placeId: CharSequence, var description: CharSequence
+        var placeId: String, var description: CharSequence
     ) {
 
         override fun toString(): String {

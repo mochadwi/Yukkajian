@@ -10,8 +10,6 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
@@ -139,7 +137,7 @@ class SettingsActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == Gallery_Pick && resultCode == Activity.RESULT_OK && data != null) {
+        if (requestCode == Gallery_Pick && resultCode == RESULT_OK && data != null) {
 
             val imageUri = data.data
             CropImage.activity()
@@ -152,7 +150,7 @@ class SettingsActivity : AppCompatActivity() {
 
             val result = CropImage.getActivityResult(data)
 
-            if (resultCode == Activity.RESULT_OK) {
+            if (resultCode == RESULT_OK) {
 
                 loadingBar!!.setTitle("Profile Image")
                 loadingBar!!.setMessage("Please Wait ")
@@ -170,28 +168,28 @@ class SettingsActivity : AppCompatActivity() {
                             "Profile Image sucessfully to firebase storage", Toast.LENGTH_SHORT)
                             .show()
 
-                        val downloadUrl = task.result.downloadUrl!!.toString()
+                        filepath.downloadUrl.addOnSuccessListener { downloadUrl ->
+                            SettingsUserRef!!.child("profileimage").setValue(downloadUrl)
+                                .addOnCompleteListener { task ->
+                                    if (task.isSuccessful) {
 
-                        SettingsUserRef!!.child("profileimage").setValue(downloadUrl)
-                            .addOnCompleteListener { task ->
-                                if (task.isSuccessful) {
+                                        val selfIntent = Intent(this@SettingsActivity,
+                                            SettingsActivity::class.java)
+                                        startActivity(selfIntent)
 
-                                    val selfIntent = Intent(this@SettingsActivity,
-                                        SettingsActivity::class.java)
-                                    startActivity(selfIntent)
+                                        Toast.makeText(this@SettingsActivity,
+                                            "profile image store to firebase database",
+                                            Toast.LENGTH_SHORT).show()
+                                        loadingBar!!.dismiss()
+                                    } else {
 
-                                    Toast.makeText(this@SettingsActivity,
-                                        "profile image store to firebase database",
-                                        Toast.LENGTH_SHORT).show()
-                                    loadingBar!!.dismiss()
-                                } else {
-
-                                    val message = task.exception!!.message
-                                    Toast.makeText(this@SettingsActivity, "Error dk tau",
-                                        Toast.LENGTH_SHORT).show()
-                                    loadingBar!!.dismiss()
+                                        val message = task.exception!!.message
+                                        Toast.makeText(this@SettingsActivity, "Error dk tau",
+                                            Toast.LENGTH_SHORT).show()
+                                        loadingBar!!.dismiss()
+                                    }
                                 }
-                            }
+                        }
                     }
                 }
 
@@ -265,7 +263,7 @@ class SettingsActivity : AppCompatActivity() {
         gender: String, relation: String
     ) {
 
-        val userMap = HashMap()
+        val userMap = HashMap<String, String>()
 
         userMap.put("username", username)
         userMap.put("fullname", profilename)
@@ -275,27 +273,24 @@ class SettingsActivity : AppCompatActivity() {
         userMap.put("gender", gender)
         userMap.put("relationshipstatus", relation)
 
-        SettingsUserRef!!.updateChildren(userMap)
-            .addOnCompleteListener(object : OnCompleteListener {
-                override fun onComplete(task: Task<*>) {
+        SettingsUserRef!!.updateChildren(userMap.toMap())
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
 
-                    if (task.isSuccessful) {
+                    SendUserToMainActivity()
+                    Toast.makeText(this@SettingsActivity,
+                        "Account Settings Updated Succesfully", Toast.LENGTH_SHORT).show()
+                    //loadingBar.dismiss();
 
-                        SendUserToMainActivity()
-                        Toast.makeText(this@SettingsActivity,
-                            "Account Settings Updated Succesfully", Toast.LENGTH_SHORT).show()
-                        //loadingBar.dismiss();
+                } else {
 
-                    } else {
-
-                        val message = task.exception!!.message
-                        Toast.makeText(this@SettingsActivity,
-                            "Error occured while updating account setting info..$message",
-                            Toast.LENGTH_SHORT).show()
-                        //loadingBar.dismiss();
-                    }
+                    val message = task.exception!!.message
+                    Toast.makeText(this@SettingsActivity,
+                        "Error occured while updating account setting info..$message",
+                        Toast.LENGTH_SHORT).show()
+                    //loadingBar.dismiss();
                 }
-            })
+            }
     }
 
     private fun SendUserToMainActivity() {

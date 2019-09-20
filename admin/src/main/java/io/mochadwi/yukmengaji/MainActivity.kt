@@ -3,8 +3,6 @@ package io.mochadwi.yukmengaji
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
-import android.support.design.widget.NavigationView
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageButton
@@ -18,6 +16,8 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.database.FirebaseRecyclerAdapter
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.mochadwi.yukmengaji.R
@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
 
     private var addPostBtn: FloatingActionButton? = null
 
-    internal var currentUserID: String
+    private lateinit var currentUserID: String
 
     internal var LikeChecker: Boolean? = false
 
@@ -74,7 +74,7 @@ class MainActivity : AppCompatActivity() {
         drawerLayout!!.addDrawerListener(actionBarDrawerToggle!!)
         actionBarDrawerToggle!!.syncState()
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        navigationView = findViewById<View>(R.id.navigation_view) as NavigationView
+        navigationView = findViewById(R.id.navigation_view)
 
         postList = findViewById<View>(R.id.all_users_post_list) as RecyclerView
         postList!!.setHasFixedSize(true)
@@ -139,7 +139,7 @@ class MainActivity : AppCompatActivity() {
                 viewHolder: PostsViewHolder, model: Posts, position: Int
             ) {
 
-                val PostKey = getRef(position).key
+                val PostKey = getRef(position).key ?: "PostKey"
 
                 viewHolder.setFullname(model.fullname)
                 viewHolder.setTime(model.time)

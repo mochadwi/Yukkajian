@@ -34,15 +34,15 @@ class ProfileActivity : AppCompatActivity() {
         profileUserRef = FirebaseDatabase.getInstance().reference.child("Users")
             .child(currentUserId!!)
 
-        userName = findViewById<View>(R.id.my_username)
-        userProfilName = findViewById<View>(R.id.my_profile_full_name)
-        userStatus = findViewById<View>(R.id.my_profile_status)
-        userCountry = findViewById<View>(R.id.my_country)
-        userGender = findViewById<View>(R.id.my_gender)
-        userRelation = findViewById<View>(R.id.my_relationship)
-        userDOB = findViewById<View>(R.id.my_dob)
+        userName = findViewById(R.id.my_username)
+        userProfilName = findViewById(R.id.my_profile_full_name)
+        userStatus = findViewById(R.id.my_profile_status)
+        userCountry = findViewById(R.id.my_country)
+        userGender = findViewById(R.id.my_gender)
+        userRelation = findViewById(R.id.my_relationship)
+        userDOB = findViewById(R.id.my_dob)
 
-        userProfileImage = findViewById<View>(R.id.my_profile_pic)
+        userProfileImage = findViewById(R.id.my_profile_pic)
 
         profileUserRef!!.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
