@@ -40,14 +40,14 @@
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="8dp"
                 android:ems="10"
-                android:hint="Username"
+                android:hint="Mosque Name"
                 android:background="@drawable/background_edittext"
                 android:paddingStart="10dp"
                 android:inputType="textPersonName"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/setup_profile_image" />
+                app:layout_constraintTop_toBottomOf="@+id/setup_profile_image"/>
 
             <EditText
                 android:id="@+id/setup_full_name"
@@ -57,14 +57,14 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:ems="10"
-                android:hint="Full Name"
+                android:hint="Mosque Full Name"
                 android:background="@drawable/background_edittext"
                 android:paddingStart="10sp"
                 android:paddingEnd="10sp"
                 android:inputType="textPersonName"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/setup_username" />
+                app:layout_constraintTop_toBottomOf="@+id/setup_username"/>
 
             <EditText
                 android:id="@+id/setup_country_name"
@@ -74,14 +74,14 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:ems="10"
-                android:hint="Country"
+                android:hint="City"
                 android:background="@drawable/background_edittext"
                 android:paddingStart="10sp"
                 android:paddingEnd="10sp"
                 android:inputType="textPersonName"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/setup_full_name" />
+                app:layout_constraintTop_toBottomOf="@+id/setup_full_name"/>
 
             <Button
                 android:id="@+id/setup_information_button"
