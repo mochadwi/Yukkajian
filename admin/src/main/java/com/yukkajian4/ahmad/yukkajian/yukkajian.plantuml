@@ -1,0 +1,341 @@
+@startuml
+
+title __YUKKAJIAN's Class Diagram__\n
+
+  namespace com.yukkajian4.ahmad.yukkajian {
+    class com.yukkajian4.ahmad.yukkajian.ChatActivity {
+        - Chattoolbar : Toolbar
+        - RootRef : DatabaseReference
+        - SendImagefileButton : ImageButton
+        - SendMessageButton : ImageButton
+        - linearLayoutManager : LinearLayoutManager
+        - mAuth : FirebaseAuth
+        - messageReceiverID : String
+        - messageReceiverName : String
+        - messageSenderID : String
+        - messagesList : List<Messages>
+        - receiverName : TextView
+        - receiverProfileImage : CircleImageView
+        - saveCurrentDate : String
+        - saveCurrentTime : String
+        - userMessageInput : EditText
+        - userMessageList : RecyclerView
+        # onCreate()
+        - DisplayReceiverInfo()
+        - FecthMessages()
+        - SendMessage()
+        - initializeFields()
+    }
+  }
+  
+
+  namespace com.yukkajian4.ahmad.yukkajian {
+    class com.yukkajian4.ahmad.yukkajian.ClickPostActivity {
+        - ClickPostRef : DatabaseReference
+        - DeletePostButton : Button
+        - EditPostButton : Button
+        - PostDescription : TextView
+        - PostImage : ImageView
+        - PostKey : String
+        - currentUserId : String
+        - databaseUserId : String
+        - description : String
+        - image : String
+        - mAuth : FirebaseAuth
+        - mToolbar : Toolbar
+        # onCreate()
+        - DeleteCurrentPost()
+        - EditCurrentPost()
+        - SendUserToMainActivity()
+    }
+  }
+  
+
+  namespace com.yukkajian4.ahmad.yukkajian {
+    class com.yukkajian4.ahmad.yukkajian.CommentsActivity {
+        - CommentInputText : EditText
+        - CommentList : RecyclerView
+        - PostCommentButton : ImageButton
+        - Post_Key : String
+        - PostsRef : DatabaseReference
+        - UsersRef : DatabaseReference
+        - current_user_id : String
+        - mAuth : FirebaseAuth
+        # onCreate()
+        # onStart()
+        - ValidateComment()
+    }
+  }
+  
+
+  namespace com.yukkajian4.ahmad.yukkajian {
+    class com.yukkajian4.ahmad.yukkajian.CommentsActivity.CommentsViewHolder {
+        ~ mView : View
+        + CommentsViewHolder()
+        + setComment()
+        + setDate()
+        + setTime()
+        + setUsername()
+    }
+  }
+  
+
+  namespace com.yukkajian4.ahmad.yukkajian {
+    class com.yukkajian4.ahmad.yukkajian.ForgotPasswordActivity {
+        - ResetEmailInput : EditText
+        - ResetPasswordSendEmailButton : Button
+        - mAuth : FirebaseAuth
+        - mToolbar : Toolbar
+        # onCreate()
+    }
+  }
+  
+
+  namespace com.yukkajian4.ahmad.yukkajian {
+    class com.yukkajian4.ahmad.yukkajian.FriendsActivity {
+        - FriendsRef : DatabaseReference
+        - UsersRef : DatabaseReference
+        - mAuth : FirebaseAuth
+        - myFriendList : RecyclerView
+        - online_user_id : String
+        # onCreate()
+        - DisplayAllFriends()
+    }
+  }
+  
+
+  namespace com.yukkajian4.ahmad.yukkajian {
+    class com.yukkajian4.ahmad.yukkajian.FriendsActivity.FriendsViewHolder {
+        ~ mView : View
+        + FriendsViewHolder()
+        + setDate()
+        + setFullname()
+        + setProfileimage()
+    }
+  }
+  
+
+  namespace com.yukkajian4.ahmad.yukkajian {
+    class com.yukkajian4.ahmad.yukkajian.LoginActivity {
+        - ForgetPasswordLink : TextView
+        - LoginButton : Button
+        - NeedNewAccountLink : TextView
+        {static} - RC_SIGN_IN : int
+        {static} - TAG : String
+        - UserEmail : EditText
+        - UserPassword : EditText
+        - googleSignInButton : ImageView
+        - loadingBar : ProgressDialog
+        - mAuth : FirebaseAuth
+        - mGoogleSignInClient : GoogleApiClient
+        + onActivityResult()
+        # onCreate()
+        # onStart()
+        - AllowingToUserLogin()
+        - SendUserToLogin()
+        - SendUserToLoginActivity()
+        - SendUserToMainActivity()
+        - firebaseAuthWithGoogle()
+        - signIn()
+    }
+  }
+  
+
+  namespace com.yukkajian4.ahmad.yukkajian {
+    class com.yukkajian4.ahmad.yukkajian.MainActivity {
+        ~ LikeChecker : Boolean
+        ~ currentUserID : String
+        - AddNewPostButton : ImageButton
+        - LikesRef : DatabaseReference
+        - NavProfileImage : CircleImageView
+        - NavProfileUserName : TextView
+        - PostsRef : DatabaseReference
+        - UsersRef : DatabaseReference
+        - actionBarDrawerToggle : ActionBarDrawerToggle
+        - addPostBtn : FloatingActionButton
+        - drawerLayout : DrawerLayout
+        - mAuth : FirebaseAuth
+        - mToolbar : Toolbar
+        - navigationView : NavigationView
+        - postList : RecyclerView
+        + onOptionsItemSelected()
+        # onCreate()
+        # onStart()
+        - CheckUserExistence()
+        - DisplayAllUsersPosts()
+        - SendUserToFindFriendsActivity()
+        - SendUserToFriendsActivity()
+        - SendUserToLoginActivity()
+        - SendUserToPostActivity()
+        - SendUserToProfileActivity()
+        - SendUserToSettingsActivity()
+        - SendUserToSetupActivity()
+        - UserMenuSelector()
+    }
+  }
+  
+
+  namespace com.yukkajian4.ahmad.yukkajian {
+    class com.yukkajian4.ahmad.yukkajian.MainActivity.PostsViewHolder {
+        ~ CommentsPostButton : ImageView
+        ~ DisplayOfNoLikes : TextView
+        ~ LikePostButton : ImageView
+        ~ LikesRef : DatabaseReference
+        ~ countLikes : int
+        ~ currentUserId : String
+        ~ mView : View
+        + PostsViewHolder()
+        + setDate()
+        + setDescription()
+        + setFullname()
+        + setLikeButtonStatus()
+        + setPostimage()
+        + setProfileimage()
+        + setTime()
+    }
+  }
+  
+
+  namespace com.yukkajian4.ahmad.yukkajian {
+    class com.yukkajian4.ahmad.yukkajian.PersonProfilActivity {
+        - CURRENT_STATE : String
+        - DeclineFriendRequestbutton : Button
+        - FriendRef : DatabaseReference
+        - FriendRequestRef : DatabaseReference
+        - SendFriendReqButton : Button
+        - UsersRef : DatabaseReference
+        - mAuth : FirebaseAuth
+        - profileUserRef : DatabaseReference
+        - receiverUserId : String
+        - saveCurrentDate : String
+        - senderUserId : String
+        - userCountry : TextView
+        - userDOB : TextView
+        - userGender : TextView
+        - userName : TextView
+        - userProfilName : TextView
+        - userProfileImage : CircleImageView
+        - userRelation : TextView
+        - userStatus : TextView
+        # onCreate()
+        - AcceptFriendRequest()
+        - CancelFriendRequest()
+        - IntializeFields()
+        - MaintananceofButton()
+        - SendFriendRequestToaPerson()
+        - UnFriendAnExistingFriend()
+    }
+  }
+  
+
+  namespace com.yukkajian4.ahmad.yukkajian {
+    class com.yukkajian4.ahmad.yukkajian.PostActivity {
+        {static} ~ Gallery_Pick : int
+        ~ amPm : String
+        ~ calendar : Calendar
+        ~ chooseTime : EditText
+        ~ currentHour : int
+        ~ currentMinute : int
+        ~ timePickerDialog : TimePickerDialog
+        {static} - BOUNDS_MOUNTAIN_VIEW : LatLngBounds
+        - DatePickerPost : String
+        - Description : String
+        - EditTextDate : EditText
+        {static} - GOOGLE_API_CLIENT_ID : int
+        - ImageUri : Uri
+        - PostDescription : EditText
+        - PostImagesReference : StorageReference
+        - PostSpinner : Spinner
+        - PostsRef : DatabaseReference
+        - SelectPostImage : ImageButton
+        - SpinnerDescription : String
+        {static} - TAG : String
+        - TimePickerPost : String
+        - UpdatePostButton : Button
+        - countPosts : long
+        - current_user_id : String
+        - downloadUrl : String
+        - loadingBar : ProgressDialog
+        - mAuth : FirebaseAuth
+        - mAutocompleteClickListener : OnItemClickListener
+        - mAutocompleteTextView : AutoCompleteTextView
+        - mGoogleApiClient : GoogleApiClient
+        - mToolbar : Toolbar
+        - mUpdatePlaceDetailsCallback : ResultCallback<PlaceBuffer>
+        - postRandomName : String
+        - saveCurrentDate : String
+        - saveCurrentTime : String
+        - userRef : DatabaseReference
+        + onConnected()
+        + onConnectionFailed()
+        + onConnectionSuspended()
+        + onOptionsItemSelected()
+        # onActivityResult()
+        # onCreate()
+        # onStart()
+        - OpenGallery()
+        - SavingInformationToDatabase()
+        - SendUserToMainActivity()
+        - StoringImageToFirebaseStorage()
+        - ValidatePostInfo()
+    }
+  }
+  
+
+  namespace com.yukkajian4.ahmad.yukkajian {
+    class com.yukkajian4.ahmad.yukkajian.RegisterActivity {
+        - CreateAccountButton : Button
+        - LoginAccountButton : Button
+        - UserConfirmPassword : EditText
+        - UserEmail : EditText
+        - UserPassword : EditText
+        - loadingBar : ProgressDialog
+        - mAuth : FirebaseAuth
+        # onCreate()
+        # onStart()
+        - CreateNewAccount()
+        - SendToLogin()
+        - SendUserToSetupActivity()
+    }
+  }
+  
+
+  namespace com.yukkajian4.ahmad.yukkajian {
+    class com.yukkajian4.ahmad.yukkajian.SetupActivity {
+        {static} ~ Gallery_Pick : int
+        ~ currentUserID : String
+        - CountryName : EditText
+        - FullName : EditText
+        - ProfileImage : CircleImageView
+        - SaveInformationButton : Button
+        - UserProfileImageRef : StorageReference
+        - UserRef : DatabaseReference
+        - Username : EditText
+        - loadingBar : ProgressDialog
+        - mAuth : FirebaseAuth
+        - mImageUri : Uri
+        # onActivityResult()
+        # onCreate()
+        - SaveAccountSetupInformation()
+        - SendUsersToMainActivity()
+    }
+  }
+  
+
+  com.yukkajian4.ahmad.yukkajian.ChatActivity o-- com.yukkajian4.ahmad.yukkajian.Class.MessagesAdapter : messagesAdapter
+  com.yukkajian4.ahmad.yukkajian.CommentsActivity +-down- com.yukkajian4.ahmad.yukkajian.CommentsActivity.CommentsViewHolder
+  com.yukkajian4.ahmad.yukkajian.FriendsActivity +-down- com.yukkajian4.ahmad.yukkajian.FriendsActivity.FriendsViewHolder
+  com.yukkajian4.ahmad.yukkajian.MainActivity +-down- com.yukkajian4.ahmad.yukkajian.MainActivity.PostsViewHolder
+  com.yukkajian4.ahmad.yukkajian.PostActivity .up.|> com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks
+  com.yukkajian4.ahmad.yukkajian.PostActivity .up.|> com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener
+  com.yukkajian4.ahmad.yukkajian.PostActivity o-- com.yukkajian4.ahmad.yukkajian.Adapter.PlaceArrayAdapter : mPlaceArrayAdapter
+
+
+right footer
+
+
+PlantUML diagram generated by SketchIt! (https://bitbucket.org/pmesmeur/sketch.it)
+For more information about this tool, please contact philippe.mesmeur@gmail.com
+endfooter
+
+@enduml
