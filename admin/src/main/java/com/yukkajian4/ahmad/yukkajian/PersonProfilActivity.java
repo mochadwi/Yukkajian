@@ -1,12 +1,10 @@
 package com.yukkajian4.ahmad.yukkajian;
 
-import android.hardware.SensorDirectChannel;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CursorAdapter;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -18,11 +16,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
-import com.yukkajian4.ahmad.yukkajian.Menu.ProfileActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Currency;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 

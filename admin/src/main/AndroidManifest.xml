@@ -42,11 +42,11 @@
             android:parentActivityName=".MainActivity" />
         <activity android:name=".ClickPostActivity" />
         <activity
-            android:name=".Menu.SettingsActivity"
+            android:name=".Menu$SettingsActivity"
             android:parentActivityName=".MainActivity" />
-        <activity android:name=".Menu.ProfileActivity" />
+        <activity android:name=".Menu$ProfileActivity" />
         <activity
-            android:name=".Menu.FindFriendsActivity"
+            android:name=".Menu$FindFriendsActivity"
             android:parentActivityName=".MainActivity" />
         <activity android:name=".CommentsActivity" />
 

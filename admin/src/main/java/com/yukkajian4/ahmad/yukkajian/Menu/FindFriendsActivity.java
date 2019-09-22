@@ -2,12 +2,12 @@ package com.yukkajian4.ahmad.yukkajian.Menu;
 
 import android.content.Context;
 import android.content.Intent;
-import android.media.Image;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -22,8 +22,6 @@ import com.squareup.picasso.Picasso;
 import com.yukkajian4.ahmad.yukkajian.Class.FindFriends;
 import com.yukkajian4.ahmad.yukkajian.PersonProfilActivity;
 import com.yukkajian4.ahmad.yukkajian.R;
-
-import org.w3c.dom.Text;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 

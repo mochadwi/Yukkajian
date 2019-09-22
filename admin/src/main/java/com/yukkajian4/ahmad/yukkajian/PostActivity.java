@@ -5,11 +5,11 @@ import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
@@ -21,7 +21,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -51,8 +50,6 @@ import com.yukkajian4.ahmad.yukkajian.Class.DateDialog;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class PostActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener,
         GoogleApiClient.ConnectionCallbacks {
@@ -254,7 +251,7 @@ public class PostActivity extends AppCompatActivity implements GoogleApiClient.O
 
                 if (task.isSuccessful()) {
 
-                    downloadUrl = task.getResult().getDownloadUrl().toString();
+                    downloadUrl = task.getResult().getStorage().getDownloadUrl().toString();
                     Toast.makeText(PostActivity.this, "Image Upload Success", Toast.LENGTH_SHORT).show();
 
                     SavingInformationToDatabase();
