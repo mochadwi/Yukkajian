@@ -36,7 +36,6 @@ class ForgotPasswordActivity : AppCompatActivity() {
         supportActionBar!!.setDisplayShowHomeEnabled(true)
         supportActionBar!!.setTitle("Reset Password")
 
-
         ResetPasswordSendEmailButton!!.setOnClickListener {
             val userEmail = ResetEmailInput!!.text.toString()
 
@@ -44,7 +43,6 @@ class ForgotPasswordActivity : AppCompatActivity() {
 
                 Toast.makeText(this@ForgotPasswordActivity, "Please write your email account",
                     Toast.LENGTH_SHORT).show()
-
             } else {
 
                 mAuth!!.sendPasswordResetEmail(userEmail).addOnCompleteListener { task ->
@@ -54,13 +52,11 @@ class ForgotPasswordActivity : AppCompatActivity() {
                             Toast.LENGTH_SHORT).show()
                         startActivity(
                             Intent(this@ForgotPasswordActivity, LoginActivity::class.java))
-
                     } else {
 
                         val message = task.exception!!.message
                         Toast.makeText(this@ForgotPasswordActivity, "Error$message",
                             Toast.LENGTH_SHORT).show()
-
                     }
                 }
             }

@@ -65,16 +65,12 @@ class ClickPostActivity : AppCompatActivity() {
 
                         DeletePostButton!!.visibility = View.VISIBLE
                         EditPostButton!!.visibility = View.VISIBLE
-
                     }
                     EditPostButton!!.setOnClickListener { EditCurrentPost(description) }
-
                 }
-
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-
             }
         })
         DeletePostButton!!.setOnClickListener { DeleteCurrentPost() }
@@ -97,7 +93,6 @@ class ClickPostActivity : AppCompatActivity() {
         val dialog = builder.create()
         dialog.show()
         dialog.window!!.setBackgroundDrawableResource(android.R.color.white)
-
     }
 
     private fun DeleteCurrentPost() {
@@ -105,7 +100,6 @@ class ClickPostActivity : AppCompatActivity() {
         ClickPostRef!!.removeValue()
         SendUserToMainActivity()
         Toast.makeText(this, "Post has been deleted.", Toast.LENGTH_SHORT).show()
-
     }
 
     private fun SendUserToMainActivity() {
@@ -114,6 +108,5 @@ class ClickPostActivity : AppCompatActivity() {
         mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         startActivity(mainIntent)
         finish()
-
     }
 }

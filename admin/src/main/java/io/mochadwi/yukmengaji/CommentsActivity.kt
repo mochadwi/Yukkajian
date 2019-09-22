@@ -63,17 +63,13 @@ class CommentsActivity : AppCompatActivity() {
                         ValidateComment(userName)
 
                         CommentInputText!!.setText("")
-
                     }
-
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {
-
                 }
             })
         }
-
     }
 
     override fun onStart() {
@@ -89,19 +85,19 @@ class CommentsActivity : AppCompatActivity() {
 
             ) {
             override fun populateViewHolder(
-                viewHolder: CommentsViewHolder, model: Comments, position: Int
+                viewHolder: CommentsViewHolder,
+                model: Comments,
+                position: Int
             ) {
 
                 viewHolder.setUsername(model.username)
                 viewHolder.setComment(model.comment)
                 viewHolder.setDate(model.date)
                 viewHolder.setTime(model.time)
-
             }
         }
 
         CommentList!!.adapter = firebaseRecyclerAdapter
-
     }
 
     class CommentsViewHolder(internal var mView: View) : RecyclerView.ViewHolder(mView) {
@@ -110,28 +106,24 @@ class CommentsActivity : AppCompatActivity() {
 
             val myUsername = mView.findViewById<View>(R.id.comment_username) as TextView
             myUsername.text = "@$username "
-
         }
 
         fun setComment(comment: String) {
 
             val myComment = mView.findViewById<View>(R.id.comment_text) as TextView
             myComment.text = comment
-
         }
 
         fun setDate(date: String) {
 
             val myDate = mView.findViewById<View>(R.id.comment_date) as TextView
             myDate.text = "  Date: $date"
-
         }
 
         fun setTime(time: String) {
 
             val myTime = mView.findViewById<View>(R.id.comment_time) as TextView
             myTime.text = "  Time: $time"
-
         }
     }
 
@@ -141,7 +133,6 @@ class CommentsActivity : AppCompatActivity() {
         if (TextUtils.isEmpty(commentText)) {
 
             Toast.makeText(this, "Please write text to comment...", Toast.LENGTH_SHORT).show()
-
         } else {
 
             val calForDate = Calendar.getInstance()
@@ -165,4 +156,3 @@ class CommentsActivity : AppCompatActivity() {
         }
     }
 }
-

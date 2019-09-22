@@ -18,7 +18,6 @@ class DateDialog(view: View) : DialogFragment(), DatePickerDialog.OnDateSetListe
     init {
 
         txtDate = view as EditText
-
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle): Dialog {
@@ -28,13 +27,11 @@ class DateDialog(view: View) : DialogFragment(), DatePickerDialog.OnDateSetListe
         val month = c.get(Calendar.MONTH)
         val day = c.get(Calendar.DAY_OF_MONTH)
         return DatePickerDialog(activity, this, year, month, day)
-
     }
 
     override fun onDateSet(view: DatePicker, year: Int, month: Int, day: Int) {
 
         val date = day.toString() + "-" + (month + 1) + "-" + year
         txtDate.setText(date)
-
     }
 }

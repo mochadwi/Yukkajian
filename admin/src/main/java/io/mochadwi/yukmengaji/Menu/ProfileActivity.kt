@@ -68,13 +68,10 @@ class ProfileActivity : AppCompatActivity() {
                     userCountry!!.text = "Country : $myCountry"
                     userGender!!.text = "Gender : $myGender"
                     userRelation!!.text = "Relationship : $myRelationship"
-
                 }
-
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-
             }
         })
     }

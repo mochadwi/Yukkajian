@@ -65,7 +65,6 @@ class ChatActivity : AppCompatActivity() {
         SendMessageButton!!.setOnClickListener { SendMessage() }
 
         FecthMessages()
-
     }
 
     private fun FecthMessages() {
@@ -79,27 +78,21 @@ class ChatActivity : AppCompatActivity() {
                         val messages = dataSnapshot.getValue<Messages>(Messages::class.java)
                         messagesList.add(messages!!)
                         messagesAdapter!!.notifyDataSetChanged()
-
                     }
                 }
 
                 override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) {
-
                 }
 
                 override fun onChildRemoved(dataSnapshot: DataSnapshot) {
-
                 }
 
                 override fun onChildMoved(dataSnapshot: DataSnapshot, s: String?) {
-
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {
-
                 }
             })
-
     }
 
     private fun SendMessage() {
@@ -109,7 +102,6 @@ class ChatActivity : AppCompatActivity() {
         if (TextUtils.isEmpty(messageText)) {
 
             Toast.makeText(this, "Please a type message", Toast.LENGTH_SHORT).show()
-
         } else {
 
             val message_sender_ref = "Messages/$messageSenderID/$messageReceiverID"
@@ -146,7 +138,6 @@ class ChatActivity : AppCompatActivity() {
                         Toast.makeText(this@ChatActivity, "Send Message succesfully",
                             Toast.LENGTH_SHORT).show()
                         userMessageInput!!.setText("")
-
                     } else {
 
                         val message = task.exception!!.message
@@ -155,7 +146,6 @@ class ChatActivity : AppCompatActivity() {
                         userMessageInput!!.setText("")
                     }
                 }
-
         }
     }
 
@@ -172,17 +162,12 @@ class ChatActivity : AppCompatActivity() {
                         val profileImage = dataSnapshot.child("profileimage").value!!.toString()
                         Picasso.with(this@ChatActivity).load(profileImage)
                             .placeholder(R.drawable.default_profile).into(receiverProfileImage)
-
-
                     }
-
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {
-
                 }
             })
-
     }
 
     private fun initializeFields() {
@@ -205,13 +190,11 @@ class ChatActivity : AppCompatActivity() {
         SendImagefileButton = findViewById<View>(R.id.send_image_file_button) as ImageButton
         userMessageInput = findViewById<View>(R.id.input_message) as EditText
 
-
         messagesAdapter = MessagesAdapter(messagesList)
         userMessageList = findViewById<View>(R.id.messages_list_users) as RecyclerView
         linearLayoutManager = LinearLayoutManager(this)
         userMessageList!!.setHasFixedSize(true)
         userMessageList!!.layoutManager = linearLayoutManager
         userMessageList!!.adapter = messagesAdapter
-
     }
 }

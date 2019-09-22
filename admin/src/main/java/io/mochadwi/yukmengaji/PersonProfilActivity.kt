@@ -44,13 +44,11 @@ class PersonProfilActivity : AppCompatActivity() {
         mAuth = FirebaseAuth.getInstance()
         senderUserId = mAuth!!.currentUser!!.uid
 
-
         receiverUserId = intent.extras!!.get("visit_user_id")!!.toString()
         UsersRef = FirebaseDatabase.getInstance().reference.child("Users")
         FriendRequestRef = FirebaseDatabase.getInstance().reference.child("FriendRequests")
 
         FriendRef = FirebaseDatabase.getInstance().reference.child("Friends")
-
 
         IntializeFields()
 
@@ -80,13 +78,10 @@ class PersonProfilActivity : AppCompatActivity() {
                     userRelation!!.text = "Relationship : $myRelationship"
 
                     MaintananceofButton()
-
                 }
-
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-
             }
         })
         DeclineFriendRequestbutton!!.visibility = View.INVISIBLE
@@ -99,12 +94,10 @@ class PersonProfilActivity : AppCompatActivity() {
                 if (CURRENT_STATE == "not_friends") {
 
                     SendFriendRequestToaPerson()
-
                 }
                 if (CURRENT_STATE == "request_sent") {
 
                     CancelFriendRequest()
-
                 }
                 if (CURRENT_STATE == "request_received") {
 
@@ -113,16 +106,12 @@ class PersonProfilActivity : AppCompatActivity() {
                 if (CURRENT_STATE == "friends") {
 
                     UnFriendAnExistingFriend()
-
                 }
             }
-
-
         } else {
 
             DeclineFriendRequestbutton!!.visibility = View.INVISIBLE
             SendFriendReqButton!!.visibility = View.INVISIBLE
-
         }
     }
 
@@ -144,12 +133,10 @@ class PersonProfilActivity : AppCompatActivity() {
 
                                 DeclineFriendRequestbutton!!.visibility = View.INVISIBLE
                                 DeclineFriendRequestbutton!!.isEnabled = false
-
                             }
                         }
                 }
             }
-
     }
 
     private fun AcceptFriendRequest() {
@@ -185,17 +172,14 @@ class PersonProfilActivity : AppCompatActivity() {
 
                                                         DeclineFriendRequestbutton!!.visibility = View.INVISIBLE
                                                         DeclineFriendRequestbutton!!.isEnabled = false
-
                                                     }
                                                 }
                                         }
                                     }
-
                             }
                         }
                 }
             }
-
     }
 
     private fun CancelFriendRequest() {
@@ -216,12 +200,10 @@ class PersonProfilActivity : AppCompatActivity() {
 
                                 DeclineFriendRequestbutton!!.visibility = View.INVISIBLE
                                 DeclineFriendRequestbutton!!.isEnabled = false
-
                             }
                         }
                 }
             }
-
     }
 
     private fun MaintananceofButton() {
@@ -242,7 +224,6 @@ class PersonProfilActivity : AppCompatActivity() {
 
                             DeclineFriendRequestbutton!!.visibility = View.INVISIBLE
                             DeclineFriendRequestbutton!!.isEnabled = false
-
                         } else if (request_type == "received") {
 
                             CURRENT_STATE = "request_received"
@@ -252,7 +233,6 @@ class PersonProfilActivity : AppCompatActivity() {
                             DeclineFriendRequestbutton!!.isEnabled = true
 
                             DeclineFriendRequestbutton!!.setOnClickListener { CancelFriendRequest() }
-
                         } else {
 
                             FriendRef!!.child(senderUserId!!)
@@ -266,21 +246,17 @@ class PersonProfilActivity : AppCompatActivity() {
 
                                             DeclineFriendRequestbutton!!.visibility = View.INVISIBLE
                                             DeclineFriendRequestbutton!!.isEnabled = false
-
                                         }
                                     }
 
                                     override fun onCancelled(databaseError: DatabaseError) {
-
                                     }
                                 })
-
                         }
                     }
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {
-
                 }
             })
     }
@@ -303,12 +279,9 @@ class PersonProfilActivity : AppCompatActivity() {
 
                                 DeclineFriendRequestbutton!!.visibility = View.INVISIBLE
                                 DeclineFriendRequestbutton!!.isEnabled = false
-
                             }
                         }
-
                 } else {
-
                 }
             }
     }
@@ -325,12 +298,11 @@ class PersonProfilActivity : AppCompatActivity() {
 
         userProfileImage = findViewById<View>(R.id.person_profile_pic) as CircleImageView
 
-        //Button
+        // Button
         SendFriendReqButton = findViewById<View>(R.id.person_send_friend_request_btn) as Button
         DeclineFriendRequestbutton = findViewById<View>(
             R.id.person_decline_friend_request) as Button
 
         CURRENT_STATE = "not_friends"
-
     }
 }

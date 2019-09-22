@@ -60,7 +60,6 @@ class SetupActivity : AppCompatActivity() {
 
         loadingBar = ProgressDialog(this)
 
-
         SaveInformationButton!!.setOnClickListener { SaveAccountSetupInformation() }
 
         ProfileImage!!.setOnClickListener {
@@ -80,18 +79,15 @@ class SetupActivity : AppCompatActivity() {
                         val image = dataSnapshot.child("profileimage").value!!.toString()
                         Picasso.with(this@SetupActivity).load(image)
                             .placeholder(R.drawable.default_profile).into(ProfileImage)
-
                     } else {
 
                         Toast.makeText(this@SetupActivity, "Please Select Profile Image First",
                             Toast.LENGTH_SHORT).show()
-
                     }
                 }
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-
             }
         })
     }
@@ -151,10 +147,8 @@ class SetupActivity : AppCompatActivity() {
                                     }
                                 }
                         }
-
                     }
                 }
-
             } else {
 
                 Toast.makeText(this, "Error Occured: Image can be cropped. Try Again",
@@ -175,7 +169,6 @@ class SetupActivity : AppCompatActivity() {
         if (TextUtils.isEmpty(username)) {
 
             Toast.makeText(this, "Please Write your Username", Toast.LENGTH_SHORT).show()
-
         }
         if (TextUtils.isEmpty(fullname)) {
 
@@ -214,9 +207,7 @@ class SetupActivity : AppCompatActivity() {
                     loadingBar!!.dismiss()
                 }
             }
-
         }
-
     }
 
     private fun SendUsersToMainActivity() {
@@ -225,7 +216,6 @@ class SetupActivity : AppCompatActivity() {
         setupIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         startActivity(setupIntent)
         finish()
-
     }
 
     companion object {

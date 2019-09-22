@@ -70,14 +70,11 @@ class LoginActivity : AppCompatActivity() {
                 firebaseAuthWithGoogle(account!!)
                 Toast.makeText(this, "Please wait, while we are getting yout auth result...",
                     Toast.LENGTH_SHORT).show()
-
             } else {
 
                 Toast.makeText(this, "Can't get auth Result", Toast.LENGTH_SHORT).show()
                 loadingBar!!.dismiss()
-
             }
-
         }
     }
 
@@ -92,7 +89,6 @@ class LoginActivity : AppCompatActivity() {
                     Log.d(TAG, "signInWithCredential:success")
                     SendUserToMainActivity()
                     loadingBar!!.dismiss()
-
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInWithCredential:failure", task.exception)
@@ -114,7 +110,6 @@ class LoginActivity : AppCompatActivity() {
         if (currentUser != null) {
 
             SendUserToMainActivity()
-
         }
     }
 
@@ -124,7 +119,6 @@ class LoginActivity : AppCompatActivity() {
         mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         startActivity(mainIntent)
         finish()
-
     }
 
     private fun SendUserToLoginActivity() {
@@ -133,7 +127,6 @@ class LoginActivity : AppCompatActivity() {
         mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         startActivity(mainIntent)
         finish()
-
     }
 
     companion object {

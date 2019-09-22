@@ -14,7 +14,9 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 class PlaceArrayAdapter(
-    context: Context, resource: Int, private val mBounds: LatLngBounds,
+    context: Context,
+    resource: Int,
+    private val mBounds: LatLngBounds,
     private val mPlaceFilter: AutocompleteFilter?
 ) : ArrayAdapter<PlaceArrayAdapter.PlaceAutocomplete>(context, resource), Filterable {
 
@@ -89,8 +91,8 @@ class PlaceArrayAdapter(
                 return null
             }
 
-            Log.i(TAG, "Query completed. Received " + autocompletePredictions.count
-                + " predictions.")
+            Log.i(TAG, "Query completed. Received " + autocompletePredictions.count +
+                " predictions.")
             val iterator = autocompletePredictions.iterator()
             val resultList = ArrayList<PlaceAutocomplete>(autocompletePredictions.count)
             while (iterator.hasNext()) {
@@ -110,7 +112,8 @@ class PlaceArrayAdapter(
     }
 
     inner class PlaceAutocomplete internal constructor(
-        var placeId: String, var description: CharSequence
+        var placeId: String,
+        var description: CharSequence
     ) {
 
         override fun toString(): String {
@@ -123,4 +126,3 @@ class PlaceArrayAdapter(
         private val TAG = "PlaceArrayAdapter"
     }
 }
-

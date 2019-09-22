@@ -19,7 +19,6 @@ import io.mochadwi.yukmengaji.Menu.ProfileActivity
 
 class FriendsActivity : AppCompatActivity() {
 
-
     private var myFriendList: RecyclerView? = null
     private var FriendsRef: DatabaseReference? = null
     private var UsersRef: DatabaseReference? = null
@@ -57,7 +56,9 @@ class FriendsActivity : AppCompatActivity() {
 
         ) {
             override fun populateViewHolder(
-                viewHolder: FriendsViewHolder, model: Friends, position: Int
+                viewHolder: FriendsViewHolder,
+                model: Friends,
+                position: Int
             ) {
 
                 viewHolder.setDate(model.date)
@@ -89,7 +90,6 @@ class FriendsActivity : AppCompatActivity() {
                                             ProfileActivity::class.java)
                                         profileIntent.putExtra("visit_user_id", userIDs)
                                         startActivity(profileIntent)
-
                                     }
                                     if (which == 1) {
 
@@ -98,21 +98,16 @@ class FriendsActivity : AppCompatActivity() {
                                         chatIntent.putExtra("visit_user_id", userIDs)
                                         chatIntent.putExtra("userName", userName)
                                         startActivity(chatIntent)
-
                                     }
                                 }
                                 builder.show()
                             }
-
                         }
-
                     }
 
                     override fun onCancelled(databaseError: DatabaseError) {
-
                     }
                 })
-
             }
         }
         myFriendList!!.adapter = firebaseRecyclerAdapter
@@ -125,7 +120,6 @@ class FriendsActivity : AppCompatActivity() {
             val myImage = mView.findViewById<View>(R.id.all_users_profile_image) as CircleImageView
             Picasso.with(ctx).load(profileimage).placeholder(R.drawable.default_profile)
                 .into(myImage)
-
         }
 
         fun setFullname(fullname: String) {

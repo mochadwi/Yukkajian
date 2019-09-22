@@ -50,7 +50,6 @@ class FindFriendsActivity : AppCompatActivity() {
         SearchResultList!!.setHasFixedSize(true)
         SearchResultList!!.layoutManager = LinearLayoutManager(this)
 
-
         SearchButton!!.setOnClickListener {
             val searchBoxInput = SearchInputText!!.text.toString()
 
@@ -74,7 +73,9 @@ class FindFriendsActivity : AppCompatActivity() {
 
             ) {
             override fun populateViewHolder(
-                viewHolder: FindFriendsViewHolder, model: FindFriends, position: Int
+                viewHolder: FindFriendsViewHolder,
+                model: FindFriends,
+                position: Int
             ) {
 
                 viewHolder.setFullname(model.fullname)
@@ -101,7 +102,6 @@ class FindFriendsActivity : AppCompatActivity() {
             val myImage = mView.findViewById<View>(R.id.all_users_profile_image) as CircleImageView
             Picasso.with(ctx).load(profileimage).placeholder(R.drawable.default_profile)
                 .into(myImage)
-
         }
 
         fun setFullname(fullname: String) {
@@ -112,7 +112,6 @@ class FindFriendsActivity : AppCompatActivity() {
         fun setStatus(status: String) {
             val myStatus = mView.findViewById<View>(R.id.all_users_status) as TextView
             myStatus.text = status
-
         }
     }
 }

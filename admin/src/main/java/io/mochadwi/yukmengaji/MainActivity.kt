@@ -99,7 +99,6 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-
             }
         })
 
@@ -112,7 +111,6 @@ class MainActivity : AppCompatActivity() {
             val newPostIntent = Intent(this@MainActivity, PostActivity::class.java)
             startActivity(newPostIntent)
         }
-
 
         DisplayAllUsersPosts()
     }
@@ -129,7 +127,9 @@ class MainActivity : AppCompatActivity() {
 
         ) {
             override fun populateViewHolder(
-                viewHolder: PostsViewHolder, model: Posts, position: Int
+                viewHolder: PostsViewHolder,
+                model: Posts,
+                position: Int
             ) {
 
                 val PostKey = getRef(position).key ?: "PostKey"
@@ -157,7 +157,6 @@ class MainActivity : AppCompatActivity() {
 
         init {
             currentUserId = FirebaseAuth.getInstance().currentUser!!.uid
-
         }
 
         fun setFullname(fullname: String) {
@@ -245,7 +244,6 @@ class MainActivity : AppCompatActivity() {
             true
         } else super.onOptionsItemSelected(
             item)
-
     }
 
     private fun UserMenuSelector(item: MenuItem) {
@@ -281,7 +279,6 @@ class MainActivity : AppCompatActivity() {
                 SendUserToLoginActivity()
             }
         }
-
     }
 
     private fun SendUserToFriendsActivity() {

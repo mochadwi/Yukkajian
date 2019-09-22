@@ -45,9 +45,9 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
 
     private lateinit var mGoogleApiClient: GoogleApiClient
     private var mPlaceArrayAdapter: PlaceArrayAdapter? = null
-    //Batas
+    // Batas
 
-    //Time Declaration
+    // Time Declaration
     private lateinit var chooseTime: EditText
     private lateinit var timePickerDialog: TimePickerDialog
     private lateinit var calendar: Calendar
@@ -119,13 +119,12 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
 
         UpdatePostButton = findViewById<View>(R.id.update_post_button) as Button
 
-
         mToolbar = findViewById<View>(R.id.toolbar_post) as Toolbar
         setSupportActionBar(mToolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setTitle("Update Post")
 
-        //Place Adapter
+        // Place Adapter
         mAutocompleteTextView = findViewById<View>(R.id.update_post_place) as AutoCompleteTextView
         mAutocompleteTextView!!.threshold = 3
 
@@ -140,7 +139,7 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
             BOUNDS_MOUNTAIN_VIEW, null)
         mAutocompleteTextView!!.setAdapter<PlaceArrayAdapter>(mPlaceArrayAdapter)
 
-        //Time AutoPicker
+        // Time AutoPicker
         chooseTime = findViewById(R.id.update_post_time)
         chooseTime.setOnClickListener {
             calendar = Calendar.getInstance()
@@ -175,27 +174,22 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
         if (ImageUri == null) {
 
             Toast.makeText(this, "Please Select post Image", Toast.LENGTH_SHORT).show()
-
         }
         if (TextUtils.isEmpty(Description)) {
 
             Toast.makeText(this, "Please Write post", Toast.LENGTH_SHORT).show()
-
         }
         if (TextUtils.isEmpty(SpinnerDescription)) {
 
             Toast.makeText(this, "Please Write jenis", Toast.LENGTH_SHORT).show()
-
         }
         if (TextUtils.isEmpty(DatePickerPost)) {
 
             Toast.makeText(this, "Please Write date", Toast.LENGTH_SHORT).show()
-
         }
         if (TextUtils.isEmpty(TimePickerPost)) {
 
             Toast.makeText(this, "Please Write waktu", Toast.LENGTH_SHORT).show()
-
         } else {
 
             loadingBar!!.setTitle("Add New Post")
@@ -204,7 +198,6 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
             loadingBar!!.setCanceledOnTouchOutside(true)
             StoringImageToFirebaseStorage()
         }
-
     }
 
     private fun StoringImageToFirebaseStorage() {
@@ -232,17 +225,13 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
 
                     SavingInformationToDatabase()
                 }
-
             } else {
 
                 val message = task.exception!!.message
                 Toast.makeText(this@PostActivity, "Error occured$message", Toast.LENGTH_SHORT)
                     .show()
-
-
             }
         }
-
     }
 
     private fun SavingInformationToDatabase() {
@@ -253,7 +242,6 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
                 if (dataSnapshot.exists()) {
 
                     countPosts = dataSnapshot.childrenCount
-
                 } else {
 
                     countPosts = 0
@@ -261,7 +249,6 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-
             }
         })
 
@@ -303,16 +290,12 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
                                 loadingBar!!.dismiss()
                             }
                         }
-
                 }
-
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-
             }
         })
-
     }
 
     private fun OpenGallery() {
@@ -321,7 +304,6 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
         galleryIntent.action = Intent.ACTION_GET_CONTENT
         galleryIntent.type = "image/*"
         startActivityForResult(galleryIntent, Gallery_Pick)
-
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -331,7 +313,6 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
 
             ImageUri = data.data
             SelectPostImage!!.setImageURI(ImageUri)
-
         }
     }
 
@@ -341,10 +322,8 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
         if (id == android.R.id.home) {
 
             SendUserToMainActivity()
-
         }
         return super.onOptionsItemSelected(item)
-
     }
 
     private fun SendUserToMainActivity() {
@@ -352,10 +331,9 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
         val mainIntent = Intent(this@PostActivity, MainActivity::class.java)
         mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         startActivity(mainIntent)
-
     }
 
-    //Date Picker
+    // Date Picker
 
     override fun onStart() {
         super.onStart()
@@ -375,7 +353,6 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
 
         mPlaceArrayAdapter!!.setGoogleApiClient(mGoogleApiClient)
         Log.i(TAG, "Google Places API connected.")
-
     }
 
     override fun onConnectionSuspended(i: Int) {
@@ -391,12 +368,11 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
         Toast.makeText(this,
             "Google Places API connection failed with error code:" + connectionResult.errorCode,
             Toast.LENGTH_LONG).show()
-
     }
 
     companion object {
 
-        //Maps Place Api
+        // Maps Place Api
         private val TAG = "PostActivity"
         private val GOOGLE_API_CLIENT_ID = 0
         private val BOUNDS_MOUNTAIN_VIEW = LatLngBounds(LatLng(37.398160, -122.180831),

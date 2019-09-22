@@ -22,7 +22,6 @@ class MessagesAdapter(private val userMessagesList: List<Messages>) :
 
     inner class MessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-
         var SenderMessageText: TextView
         var ReceiverMessageText: TextView
         var receiverProfileImage: CircleImageView
@@ -34,8 +33,6 @@ class MessagesAdapter(private val userMessagesList: List<Messages>) :
                 R.id.receiver_text_message) as TextView
             receiverProfileImage = itemView.findViewById<View>(
                 R.id.message_profile_image) as CircleImageView
-
-
         }
     }
 
@@ -46,7 +43,6 @@ class MessagesAdapter(private val userMessagesList: List<Messages>) :
 
         mAuth = FirebaseAuth.getInstance()
         return MessageViewHolder(v)
-
     }
 
     override fun onBindViewHolder(holder: MessageViewHolder, position: Int) {
@@ -67,13 +63,10 @@ class MessagesAdapter(private val userMessagesList: List<Messages>) :
 
                     Picasso.with(holder.receiverProfileImage.context).load(image)
                         .placeholder(R.drawable.default_profile).into(holder.receiverProfileImage)
-
                 }
-
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-
             }
         })
 
@@ -88,7 +81,6 @@ class MessagesAdapter(private val userMessagesList: List<Messages>) :
                 holder.SenderMessageText.setTextColor(Color.WHITE)
                 holder.SenderMessageText.gravity = Gravity.LEFT
                 holder.SenderMessageText.text = messages.message
-
             } else {
 
                 holder.SenderMessageText.visibility = View.INVISIBLE
@@ -100,11 +92,8 @@ class MessagesAdapter(private val userMessagesList: List<Messages>) :
                 holder.ReceiverMessageText.setTextColor(Color.WHITE)
                 holder.ReceiverMessageText.gravity = Gravity.LEFT
                 holder.ReceiverMessageText.text = messages.message
-
             }
-
         }
-
     }
 
     override fun getItemCount(): Int {

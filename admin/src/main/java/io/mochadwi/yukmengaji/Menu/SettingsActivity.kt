@@ -80,13 +80,11 @@ class SettingsActivity : AppCompatActivity() {
         PostUsersRef!!.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
 
-                //Error
-                //String PostFullname = dataSnapshot.child("fullname").getValue().toString();
-
+                // Error
+                // String PostFullname = dataSnapshot.child("fullname").getValue().toString();
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-
             }
         })
 
@@ -114,13 +112,10 @@ class SettingsActivity : AppCompatActivity() {
                     userCountry!!.setText(myCountry)
                     userGender!!.setText(myGender)
                     userRelation!!.setText(myRelationship)
-
                 }
-
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-
             }
         })
 
@@ -144,7 +139,6 @@ class SettingsActivity : AppCompatActivity() {
                 .setGuidelines(CropImageView.Guidelines.ON)
                 .setAspectRatio(1, 1)
                 .start(this)
-
         }
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
 
@@ -192,7 +186,6 @@ class SettingsActivity : AppCompatActivity() {
                         }
                     }
                 }
-
             } else {
 
                 Toast.makeText(this, "Error Occured: Image can be cropped. Try Again",
@@ -215,37 +208,30 @@ class SettingsActivity : AppCompatActivity() {
         if (TextUtils.isEmpty(username)) {
 
             Toast.makeText(this, "Please write you username", Toast.LENGTH_SHORT).show()
-
         }
         if (TextUtils.isEmpty(profilename)) {
 
             Toast.makeText(this, "Please write you Profil Name", Toast.LENGTH_SHORT).show()
-
         }
         if (TextUtils.isEmpty(status)) {
 
             Toast.makeText(this, "Please write you Status", Toast.LENGTH_SHORT).show()
-
         }
         if (TextUtils.isEmpty(dob)) {
 
             Toast.makeText(this, "Please write you Date of Birth", Toast.LENGTH_SHORT).show()
-
         }
         if (TextUtils.isEmpty(country)) {
 
             Toast.makeText(this, "Please write you Contry", Toast.LENGTH_SHORT).show()
-
         }
         if (TextUtils.isEmpty(gender)) {
 
             Toast.makeText(this, "Please write you Gender", Toast.LENGTH_SHORT).show()
-
         }
         if (TextUtils.isEmpty(relation)) {
 
             Toast.makeText(this, "Please write you Relationship", Toast.LENGTH_SHORT).show()
-
         } else {
 
             loadingBar!!.setTitle("Profile Image")
@@ -254,13 +240,17 @@ class SettingsActivity : AppCompatActivity() {
             loadingBar!!.show()
 
             UpdateAccountInfo(username, profilename, status, dob, country, gender, relation)
-
         }
     }
 
     private fun UpdateAccountInfo(
-        username: String, profilename: String, status: String, dob: String, country: String,
-        gender: String, relation: String
+        username: String,
+        profilename: String,
+        status: String,
+        dob: String,
+        country: String,
+        gender: String,
+        relation: String
     ) {
 
         val userMap = HashMap<String, String>()
@@ -280,15 +270,14 @@ class SettingsActivity : AppCompatActivity() {
                     SendUserToMainActivity()
                     Toast.makeText(this@SettingsActivity,
                         "Account Settings Updated Succesfully", Toast.LENGTH_SHORT).show()
-                    //loadingBar.dismiss();
-
+                    // loadingBar.dismiss();
                 } else {
 
                     val message = task.exception!!.message
                     Toast.makeText(this@SettingsActivity,
                         "Error occured while updating account setting info..$message",
                         Toast.LENGTH_SHORT).show()
-                    //loadingBar.dismiss();
+                    // loadingBar.dismiss();
                 }
             }
     }
