@@ -21,5 +21,11 @@
     <string name="passwordconfirm">Konfirmasi Kata Sandi</string>
     <string name="signup">Daftar</string>
     <string name="alreadyaccount">Sudah punya akun? Login</string>
+    <string name="poster" translatable="false">Poster</string>
+    <string name="comment">Comment</string>
+    <string name="send">Send</string>
+    <string name="add">Add</string>
+    <string name="like">Like</string>
+    <string name="search_friends">Search Friends</string>
 
 </resources>

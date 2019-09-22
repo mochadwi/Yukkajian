@@ -44,7 +44,8 @@
         app:layout_constraintStart_toEndOf="@+id/comment_input"
         app:layout_constraintTop_toBottomOf="@+id/comment_list"
         app:layout_constraintVertical_bias="0.966"
-        android:contentDescription="TODO" android:contentDescription="TODO" app:srcCompat="@android:drawable/ic_menu_send" />
+        android:contentDescription="@string/comment"
+        app:srcCompat="@android:drawable/ic_menu_send"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/comment_list"

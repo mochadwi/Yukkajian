@@ -46,7 +46,8 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/search_box_input"
         app:layout_constraintTop_toBottomOf="@+id/simpleTextID"
-        android:contentDescription="TODO" android:contentDescription="TODO" app:srcCompat="@drawable/common_google_signin_btn_icon_dark" />
+        android:contentDescription="@string/search_friends"
+        app:srcCompat="@drawable/common_google_signin_btn_icon_dark"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/search_result_list"

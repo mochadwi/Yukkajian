@@ -1,17 +1,5 @@
 package com.yukkajian4.ahmad.yukkajian;
 
-import android.app.ProgressDialog;
-import android.content.Intent;
-import android.net.Uri;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
-import android.text.TextUtils;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,32 +11,48 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
 import java.util.HashMap;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SetupActivity extends AppCompatActivity {
 
-    private EditText Username, FullName, CountryName;
-    private Button SaveInformationButton;
-    private CircleImageView ProfileImage;
-
-    private FirebaseAuth mAuth;
-    private DatabaseReference UserRef;
-
-    private ProgressDialog loadingBar;
+    final static int Gallery_Pick = 1;
 
     String currentUserID;
 
-    final static int Gallery_Pick = 1;
+    private CircleImageView ProfileImage;
 
-    private Uri mImageUri = null;
+    private Button SaveInformationButton;
 
     private StorageReference UserProfileImageRef;
+
+    private DatabaseReference UserRef;
+
+    private EditText Username, FullName, CountryName;
+
+    private ProgressDialog loadingBar;
+
+    private FirebaseAuth mAuth;
+
+    private Uri mImageUri = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,6 +121,75 @@ public class SetupActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void SaveAccountSetupInformation() {
+
+        String username = Username.getText().toString();
+        String fullname = FullName.getText().toString();
+        String country = CountryName.getText().toString();
+
+        String user_id = mAuth.getCurrentUser().getUid();
+
+        if (TextUtils.isEmpty(username)) {
+
+            Toast.makeText(this, "Please Write your Username", Toast.LENGTH_SHORT).show();
+
+        }
+        if (TextUtils.isEmpty(fullname)) {
+
+            Toast.makeText(this, "Please Write your full name", Toast.LENGTH_SHORT).show();
+        }
+        if (TextUtils.isEmpty(country)) {
+
+            Toast.makeText(this, "Please Write your country", Toast.LENGTH_SHORT).show();
+        } else {
+
+            loadingBar.setTitle("Saving Information");
+            loadingBar.setMessage("Please Wait Loading create new account");
+            loadingBar.show();
+            loadingBar.setCanceledOnTouchOutside(false);
+
+            HashMap userMap = new HashMap();
+            userMap.put("username", username);
+            userMap.put("fullname", fullname);
+            userMap.put("country", country);
+            userMap.put("status", "Hai There im using Poster");
+            userMap.put("gender", "none");
+            userMap.put("dob", "none");
+            userMap.put("relationshipstatus", "none");
+            UserRef.updateChildren(userMap).addOnCompleteListener(new OnCompleteListener() {
+                @Override
+                public void onComplete(@NonNull Task task) {
+
+                    if (task.isSuccessful()) {
+
+                        SendUsersToMainActivity();
+                        Toast.makeText(SetupActivity.this, "your account created succesfulyl",
+                            Toast.LENGTH_SHORT).show();
+                        loadingBar.dismiss();
+                    } else {
+
+                        String message = task.getException().getMessage();
+                        Toast.makeText(SetupActivity.this, "error" + message, Toast.LENGTH_SHORT)
+                            .show();
+                        loadingBar.dismiss();
+                    }
+
+                }
+            });
+
+        }
+
+    }
+
+    private void SendUsersToMainActivity() {
+
+        Intent setupIntent = new Intent(SetupActivity.this, MainActivity.class);
+        setupIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(setupIntent);
+        finish();
+
     }
 
     @Override
@@ -189,71 +262,5 @@ public class SetupActivity extends AppCompatActivity {
                 loadingBar.dismiss();
             }
         }
-    }
-    private void SaveAccountSetupInformation() {
-
-        String username = Username.getText().toString();
-        String fullname = FullName.getText().toString();
-        String country = CountryName.getText().toString();
-
-        String user_id = mAuth.getCurrentUser().getUid();
-
-        if (TextUtils.isEmpty(username)) {
-
-            Toast.makeText(this, "Please Write your Username", Toast.LENGTH_SHORT).show();
-
-        }
-        if (TextUtils.isEmpty(fullname)) {
-
-            Toast.makeText(this, "Please Write your full name", Toast.LENGTH_SHORT).show();
-        }
-        if (TextUtils.isEmpty(country)) {
-
-            Toast.makeText(this, "Please Write your country", Toast.LENGTH_SHORT).show();
-        } else {
-
-            loadingBar.setTitle("Saving Information");
-            loadingBar.setMessage("Please Wait Loading create new account");
-            loadingBar.show();
-            loadingBar.setCanceledOnTouchOutside(false);
-
-            HashMap userMap = new HashMap();
-            userMap.put("username", username);
-            userMap.put("fullname", fullname);
-            userMap.put("country", country);
-            userMap.put("status", "Hai There im using Poster");
-            userMap.put("gender", "none");
-            userMap.put("dob", "none");
-            userMap.put("relationshipstatus", "none");
-            UserRef.updateChildren(userMap).addOnCompleteListener(new OnCompleteListener() {
-                @Override
-                public void onComplete(@NonNull Task task) {
-
-                    if (task.isSuccessful()) {
-
-                        SendUsersToMainActivity();
-                        Toast.makeText(SetupActivity.this, "your account created succesfulyl", Toast.LENGTH_SHORT).show();
-                        loadingBar.dismiss();
-                    } else {
-
-                        String message = task.getException().getMessage();
-                        Toast.makeText(SetupActivity.this, "error" + message, Toast.LENGTH_SHORT).show();
-                        loadingBar.dismiss();
-                    }
-
-                }
-            });
-
-        }
-
-    }
-
-    private void SendUsersToMainActivity() {
-
-        Intent setupIntent = new Intent(SetupActivity.this, MainActivity.class);
-        setupIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(setupIntent);
-        finish();
-
     }
 }

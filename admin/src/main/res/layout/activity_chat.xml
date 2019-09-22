@@ -36,7 +36,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/input_message"
-        android:contentDescription="TODO" android:contentDescription="TODO" app:srcCompat="@drawable/action_add_image" />
+        android:contentDescription="@string/send" app:srcCompat="@drawable/action_add_image"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/messages_list_users"
@@ -62,6 +62,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/messages_list_users"
         app:layout_constraintVertical_bias="1.0"
-        android:contentDescription="TODO" android:contentDescription="TODO" app:srcCompat="@drawable/action_add_send" />
+        android:contentDescription="@string/send" app:srcCompat="@drawable/action_add_send"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
