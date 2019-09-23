@@ -38,6 +38,8 @@ public class SetupActivity extends AppCompatActivity {
 
     String currentUserID;
 
+    private EditText FullName;
+
     private CircleImageView ProfileImage;
 
     private Button SaveInformationButton;
@@ -45,8 +47,6 @@ public class SetupActivity extends AppCompatActivity {
     private StorageReference UserProfileImageRef;
 
     private DatabaseReference UserRef;
-
-    private EditText Username, FullName, CountryName;
 
     private ProgressDialog loadingBar;
 
@@ -65,9 +65,7 @@ public class SetupActivity extends AppCompatActivity {
         UserProfileImageRef = FirebaseStorage.getInstance().getReference().child("Profile Images");
 
         ProfileImage = (CircleImageView) findViewById(R.id.setup_profile_image);
-        Username = (EditText) findViewById(R.id.setup_username);
         FullName = (EditText) findViewById(R.id.setup_full_name);
-        CountryName = (EditText) findViewById(R.id.setup_country_name);
 
         SaveInformationButton = (Button) findViewById(R.id.setup_information_button);
 
@@ -125,17 +123,12 @@ public class SetupActivity extends AppCompatActivity {
 
     private void SaveAccountSetupInformation() {
 
-        String username = Username.getText().toString();
         String fullname = FullName.getText().toString();
-        String country = CountryName.getText().toString();
+        // TODO(mochamadiqbaldwicahyo): 2019-09-23 Get current location instead
+        String country = "Bandung";
 
         String user_id = mAuth.getCurrentUser().getUid();
 
-        if (TextUtils.isEmpty(username)) {
-
-            Toast.makeText(this, "Please Write your Username", Toast.LENGTH_SHORT).show();
-
-        }
         if (TextUtils.isEmpty(fullname)) {
 
             Toast.makeText(this, "Please Write your full name", Toast.LENGTH_SHORT).show();
@@ -151,7 +144,7 @@ public class SetupActivity extends AppCompatActivity {
             loadingBar.setCanceledOnTouchOutside(false);
 
             HashMap userMap = new HashMap();
-            userMap.put("username", username);
+            userMap.put("username", "dkm-" + fullname);
             userMap.put("fullname", fullname);
             userMap.put("country", country);
             userMap.put("status", "Hai There im using Poster");

@@ -1,29 +1,5 @@
 package com.yukkajian4.ahmad.yukkajian;
 
-import android.app.FragmentTransaction;
-import android.app.ProgressDialog;
-import android.app.TimePickerDialog;
-import android.content.Intent;
-import android.net.Uri;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
-import androidx.appcompat.widget.Toolbar;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.Spinner;
-import android.widget.TimePicker;
-import android.widget.Toast;
-
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -44,61 +20,178 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
 import com.yukkajian4.ahmad.yukkajian.Adapter.PlaceArrayAdapter;
 import com.yukkajian4.ahmad.yukkajian.Class.DateDialog;
+
+import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.Spinner;
+import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 public class PostActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener,
         GoogleApiClient.ConnectionCallbacks {
 
-    private Toolbar mToolbar;
+    final static int Gallery_Pick = 1;
 
-    private ProgressDialog loadingBar;
+    private static final LatLngBounds BOUNDS_MOUNTAIN_VIEW = new LatLngBounds(
+        new LatLng(37.398160, -122.180831), new LatLng(37.430610, -121.972090));
 
-    private ImageButton SelectPostImage;
-    private EditText PostDescription;
-    private Button UpdatePostButton;
-
-    private EditText EditTextDate;
-    private Spinner PostSpinner;
+    private static final int GOOGLE_API_CLIENT_ID = 0;
 
     //Maps Place Api
     private static final String TAG = "PostActivity";
-    private static final int GOOGLE_API_CLIENT_ID = 0;
-    private AutoCompleteTextView mAutocompleteTextView;
 
-    private GoogleApiClient mGoogleApiClient;
-    private PlaceArrayAdapter mPlaceArrayAdapter;
-    private static final LatLngBounds BOUNDS_MOUNTAIN_VIEW = new LatLngBounds(new LatLng(37.398160, -122.180831), new LatLng(37.430610, -121.972090));
-    //Batas
+    String amPm;
 
+    Calendar calendar;
 
     //Time Declaration
     EditText chooseTime;
-    TimePickerDialog timePickerDialog;
-    Calendar calendar;
-    int currentHour;
-    int currentMinute;
-    String amPm;
 
-    final static int Gallery_Pick = 1;
-    private Uri ImageUri;
+    int currentHour;
+
+    int currentMinute;
+
+    TimePickerDialog timePickerDialog;
+
+    private String DatePickerPost;
 
     private String Description;
-    private String SpinnerDescription;
-    private String DatePickerPost;
-    private String TimePickerPost;
+
+    private EditText EditTextDate;
+    //Batas
+
+    private Uri ImageUri;
+
+    private EditText PostDescription;
 
     private StorageReference PostImagesReference;
-    private DatabaseReference userRef, PostsRef;
+
+    private Spinner PostSpinner;
+
+    private ImageButton SelectPostImage;
+
+    private String SpinnerDescription;
+
+    private String TimePickerPost;
+
+    private Button UpdatePostButton;
+
+    private long countPosts = 0;
+
+    private ProgressDialog loadingBar;
+
     private FirebaseAuth mAuth;
+
+    private AutoCompleteTextView mAutocompleteTextView;
+
+    private GoogleApiClient mGoogleApiClient;
+
+    private PlaceArrayAdapter mPlaceArrayAdapter;
+
+    private Toolbar mToolbar;
+
+    private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback
+        = new ResultCallback<PlaceBuffer>() {
+        @Override
+        public void onResult(PlaceBuffer places) {
+            if (!places.getStatus().isSuccess()) {
+                Log.e(TAG, "Place query did not complete. Error: " +
+                    places.getStatus().toString());
+                return;
+            }
+            // Selecting the first object buffer.
+            final Place place = places.get(0);
+            CharSequence attributions = places.getAttributions();
+
+            // mNameView.setText(Html.fromHtml(place.getAddress() + ""));
+
+        }
+    };
+
+    private AdapterView.OnItemClickListener mAutocompleteClickListener
+        = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            final PlaceArrayAdapter.PlaceAutocomplete item = mPlaceArrayAdapter.getItem(position);
+            final String placeId = String.valueOf(item.placeId);
+            Log.i(TAG, "Selected: " + item.description);
+            PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
+                .getPlaceById(mGoogleApiClient, placeId);
+            placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
+            Log.i(TAG, "Fetching details for ID: " + item.placeId);
+        }
+    };
 
     private String saveCurrentDate, saveCurrentTime, postRandomName, downloadUrl, current_user_id;
 
-    private long countPosts = 0;
+    private DatabaseReference userRef, PostsRef;
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+
+            SendUserToMainActivity();
+
+        }
+        return super.onOptionsItemSelected(item);
+
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+        mPlaceArrayAdapter.setGoogleApiClient(mGoogleApiClient);
+        Log.i(TAG, "Google Places API connected.");
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        mPlaceArrayAdapter.setGoogleApiClient(null);
+        Log.e(TAG, "Google Places API connection suspended.");
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+        Log.e(TAG, "Google Places API connection failed with error code: "
+            + connectionResult.getErrorCode());
+
+        Toast.makeText(this,
+            "Google Places API connection failed with error code:" +
+                connectionResult.getErrorCode(),
+            Toast.LENGTH_LONG).show();
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -188,6 +281,20 @@ public class PostActivity extends AppCompatActivity implements GoogleApiClient.O
             }
         });
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Gallery_Pick && resultCode == RESULT_OK && data != null) {
+
+            ImageUri = data.getData();
+            SelectPostImage.setImageURI(ImageUri);
+
+        }
+    }
+
+    //Date Picker
 
     private void ValidatePostInfo() {
 
@@ -344,40 +451,6 @@ public class PostActivity extends AppCompatActivity implements GoogleApiClient.O
 
     }
 
-    private void OpenGallery() {
-
-        Intent galleryIntent = new Intent();
-        galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
-        galleryIntent.setType("image/*");
-        startActivityForResult(galleryIntent, Gallery_Pick);
-
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Gallery_Pick && resultCode == RESULT_OK && data != null) {
-
-            ImageUri = data.getData();
-            SelectPostImage.setImageURI(ImageUri);
-
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-
-            SendUserToMainActivity();
-
-        }
-        return super.onOptionsItemSelected(item);
-
-    }
-
     private void SendUserToMainActivity() {
 
         Intent mainIntent = new Intent(PostActivity.this, MainActivity.class);
@@ -385,8 +458,6 @@ public class PostActivity extends AppCompatActivity implements GoogleApiClient.O
         startActivity(mainIntent);
 
     }
-
-    //Date Picker
 
     @Override
     protected void onStart() {
@@ -408,63 +479,12 @@ public class PostActivity extends AppCompatActivity implements GoogleApiClient.O
         });
     }
 
-    private AdapterView.OnItemClickListener mAutocompleteClickListener
-            = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    private void OpenGallery() {
 
-            final PlaceArrayAdapter.PlaceAutocomplete item = mPlaceArrayAdapter.getItem(position);
-            final String placeId = String.valueOf(item.placeId);
-            Log.i(TAG, "Selected: " + item.description);
-            PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
-                    .getPlaceById(mGoogleApiClient, placeId);
-            placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
-            Log.i(TAG, "Fetching details for ID: " + item.placeId);
-        }
-    };
-
-    private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback
-            = new ResultCallback<PlaceBuffer>() {
-        @Override
-        public void onResult(PlaceBuffer places) {
-            if (!places.getStatus().isSuccess()) {
-                Log.e(TAG, "Place query did not complete. Error: " +
-                        places.getStatus().toString());
-                return;
-            }
-            // Selecting the first object buffer.
-            final Place place = places.get(0);
-            CharSequence attributions = places.getAttributions();
-
-            // mNameView.setText(Html.fromHtml(place.getAddress() + ""));
-
-        }
-    };
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-
-        mPlaceArrayAdapter.setGoogleApiClient(mGoogleApiClient);
-        Log.i(TAG, "Google Places API connected.");
-
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        mPlaceArrayAdapter.setGoogleApiClient(null);
-        Log.e(TAG, "Google Places API connection suspended.");
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-        Log.e(TAG, "Google Places API connection failed with error code: "
-                + connectionResult.getErrorCode());
-
-        Toast.makeText(this,
-                "Google Places API connection failed with error code:" +
-                        connectionResult.getErrorCode(),
-                Toast.LENGTH_LONG).show();
+        Intent galleryIntent = new Intent();
+        galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+        galleryIntent.setType("image/*");
+        startActivityForResult(galleryIntent, Gallery_Pick);
 
     }
 }
