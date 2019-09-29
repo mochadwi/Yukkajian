@@ -29,13 +29,8 @@ class SettingsActivity : AppCompatActivity() {
 
     private var userName: EditText? = null
     private var userProfilName: EditText? = null
-    private var userStatus: EditText? = null
-    private var userCountry: EditText? = null
-    private var userGender: EditText? = null
-    private var userRelation: EditText? = null
-    private var userDOB: EditText? = null
-    private var UpdateAccountSettingsButton: Button? = null
     private var userProfileImage: CircleImageView? = null
+    private var UpdateAccountSettingsButton: Button? = null
 
     private var SettingsUserRef: DatabaseReference? = null
     private var PostUsersRef: DatabaseReference? = null
@@ -69,11 +64,6 @@ class SettingsActivity : AppCompatActivity() {
 
         userName = findViewById<View>(R.id.settings_username) as EditText
         userProfilName = findViewById<View>(R.id.settings_profile_full_name) as EditText
-        userStatus = findViewById<View>(R.id.settings_status) as EditText
-        userCountry = findViewById<View>(R.id.settings_country) as EditText
-        userGender = findViewById<View>(R.id.settings_gender) as EditText
-        userRelation = findViewById<View>(R.id.settings_relationship) as EditText
-        userDOB = findViewById<View>(R.id.settings_dob) as EditText
 
         userProfileImage = findViewById<View>(R.id.settings_profile_image) as CircleImageView
 
@@ -107,11 +97,6 @@ class SettingsActivity : AppCompatActivity() {
 
                     userName!!.setText(myUsername)
                     userProfilName!!.setText(myProfileName)
-                    userStatus!!.setText(myProfileStatus)
-                    userDOB!!.setText(myDOB)
-                    userCountry!!.setText(myCountry)
-                    userGender!!.setText(myGender)
-                    userRelation!!.setText(myRelationship)
                 }
             }
 
@@ -199,11 +184,6 @@ class SettingsActivity : AppCompatActivity() {
 
         val username = userName!!.text.toString()
         val profilename = userProfilName!!.text.toString()
-        val status = userStatus!!.text.toString()
-        val dob = userDOB!!.text.toString()
-        val country = userCountry!!.text.toString()
-        val gender = userGender!!.text.toString()
-        val relation = userRelation!!.text.toString()
 
         if (TextUtils.isEmpty(username)) {
 
@@ -212,26 +192,6 @@ class SettingsActivity : AppCompatActivity() {
         if (TextUtils.isEmpty(profilename)) {
 
             Toast.makeText(this, "Please write you Profil Name", Toast.LENGTH_SHORT).show()
-        }
-        if (TextUtils.isEmpty(status)) {
-
-            Toast.makeText(this, "Please write you Status", Toast.LENGTH_SHORT).show()
-        }
-        if (TextUtils.isEmpty(dob)) {
-
-            Toast.makeText(this, "Please write you Date of Birth", Toast.LENGTH_SHORT).show()
-        }
-        if (TextUtils.isEmpty(country)) {
-
-            Toast.makeText(this, "Please write you Contry", Toast.LENGTH_SHORT).show()
-        }
-        if (TextUtils.isEmpty(gender)) {
-
-            Toast.makeText(this, "Please write you Gender", Toast.LENGTH_SHORT).show()
-        }
-        if (TextUtils.isEmpty(relation)) {
-
-            Toast.makeText(this, "Please write you Relationship", Toast.LENGTH_SHORT).show()
         } else {
 
             loadingBar!!.setTitle("Profile Image")
@@ -239,30 +199,20 @@ class SettingsActivity : AppCompatActivity() {
             loadingBar!!.setCanceledOnTouchOutside(true)
             loadingBar!!.show()
 
-            UpdateAccountInfo(username, profilename, status, dob, country, gender, relation)
+            UpdateAccountInfo(username, profilename)
         }
     }
 
     private fun UpdateAccountInfo(
         username: String,
-        profilename: String,
-        status: String,
-        dob: String,
-        country: String,
-        gender: String,
-        relation: String
+        profilename: String
     ) {
 
         val userMap = HashMap<String, String>()
 
         userMap.put("username", username)
         userMap.put("fullname", profilename)
-        userMap.put("status", status)
-        userMap.put("dob", dob)
-        userMap.put("country", country)
-        userMap.put("gender", gender)
-        userMap.put("relationshipstatus", relation)
-
+        
         SettingsUserRef!!.updateChildren(userMap.toMap())
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
