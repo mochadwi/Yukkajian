@@ -12,10 +12,10 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.*
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import com.squareup.picasso.Picasso
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import de.hdodenhof.circleimageview.CircleImageView
@@ -64,7 +64,7 @@ class SetupActivity : AppCompatActivity() {
             startActivityForResult(galleryIntent, Gallery_Pick)
         }
 
-        UserRef!!.addValueEventListener(object : ValueEventListener {
+/*        UserRef!!.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
 
                 if (dataSnapshot.exists()) {
@@ -84,7 +84,7 @@ class SetupActivity : AppCompatActivity() {
 
             override fun onCancelled(databaseError: DatabaseError) {
             }
-        })
+        })*/
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -156,7 +156,7 @@ class SetupActivity : AppCompatActivity() {
     private fun SaveAccountSetupInformation() {
 
         val fullname = FullName!!.text.toString()
-        val username = "dkm_${fullname.toLowerCase().trim()}"
+        val username = "dkm_${fullname.toLowerCase().replace("\\s".toRegex(), "")}"
         val country = "Indonesia"
 
         val user_id = mAuth!!.currentUser!!.uid
