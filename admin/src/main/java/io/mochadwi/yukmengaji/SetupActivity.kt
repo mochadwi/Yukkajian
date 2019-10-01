@@ -23,9 +23,7 @@ import java.util.*
 
 class SetupActivity : AppCompatActivity() {
 
-    private var Username: EditText? = null
     private var FullName: EditText? = null
-    private var CountryName: EditText? = null
     private var SaveInformationButton: Button? = null
     private var ProfileImage: CircleImageView? = null
 
@@ -50,13 +48,10 @@ class SetupActivity : AppCompatActivity() {
         UserProfileImageRef = FirebaseStorage.getInstance().reference.child("Profile Images")
 
         ProfileImage = findViewById<View>(R.id.setup_profile_image) as CircleImageView
-        Username = findViewById<View>(R.id.setup_username) as EditText
         FullName = findViewById<View>(R.id.setup_full_name) as EditText
-        CountryName = findViewById<View>(R.id.setup_country_name) as EditText
 
         SaveInformationButton = findViewById<View>(R.id.setup_information_button) as Button
 
-        ProfileImage = findViewById<View>(R.id.setup_profile_image) as CircleImageView
 
         loadingBar = ProgressDialog(this)
 
@@ -160,23 +155,15 @@ class SetupActivity : AppCompatActivity() {
 
     private fun SaveAccountSetupInformation() {
 
-        val username = Username!!.text.toString()
         val fullname = FullName!!.text.toString()
-        val country = CountryName!!.text.toString()
+        val username = "dkm_${fullname.toLowerCase().trim()}"
+        val country = "Indonesia"
 
         val user_id = mAuth!!.currentUser!!.uid
 
-        if (TextUtils.isEmpty(username)) {
-
-            Toast.makeText(this, "Please Write your Username", Toast.LENGTH_SHORT).show()
-        }
         if (TextUtils.isEmpty(fullname)) {
 
             Toast.makeText(this, "Please Write your full name", Toast.LENGTH_SHORT).show()
-        }
-        if (TextUtils.isEmpty(country)) {
-
-            Toast.makeText(this, "Please Write your country", Toast.LENGTH_SHORT).show()
         } else {
 
             loadingBar!!.setTitle("Saving Information")
@@ -188,10 +175,7 @@ class SetupActivity : AppCompatActivity() {
             userMap.put("username", username)
             userMap.put("fullname", fullname)
             userMap.put("country", country)
-            userMap.put("status", "Hai There im using Poster")
-            userMap.put("gender", "none")
-            userMap.put("dob", "none")
-            userMap.put("relationshipstatus", "none")
+
             UserRef!!.updateChildren(userMap.toMap()).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
 
