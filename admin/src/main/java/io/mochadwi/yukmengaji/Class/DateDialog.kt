@@ -20,7 +20,7 @@ class DateDialog(view: View) : DialogFragment(), DatePickerDialog.OnDateSetListe
         txtDate = view as EditText
     }
 
-    override fun onCreateDialog(savedInstanceState: Bundle): Dialog {
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 
         val c = Calendar.getInstance()
         val year = c.get(Calendar.YEAR)

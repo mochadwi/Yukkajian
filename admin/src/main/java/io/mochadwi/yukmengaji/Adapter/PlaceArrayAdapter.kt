@@ -32,11 +32,11 @@ class PlaceArrayAdapter(
     }
 
     override fun getCount(): Int {
-        return mResultList!!.size
+        return mResultList?.size ?: 0
     }
 
     override fun getItem(position: Int): PlaceAutocomplete? {
-        return mResultList!![position]
+        return mResultList?.get(position) ?: PlaceAutocomplete("none", "none")
     }
 
     override fun getFilter(): Filter {
@@ -56,7 +56,7 @@ class PlaceArrayAdapter(
                 return results
             }
 
-            override fun publishResults(constraint: CharSequence, results: FilterResults?) {
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
                 if (results != null && results.count > 0) {
                     // The API returned at least one result, update the data.
                     notifyDataSetChanged()
@@ -68,10 +68,10 @@ class PlaceArrayAdapter(
         }
     }
 
-    private fun getPredictions(constraint: CharSequence?): ArrayList<PlaceAutocomplete>? {
+    private fun getPredictions(constraint: CharSequence): ArrayList<PlaceAutocomplete>? {
 
         mGoogleApiClient?.let {
-            Log.i(TAG, "Executing autocomplete query for: " + constraint!!)
+            Log.i(TAG, "Executing autocomplete query for: $constraint")
 
             val results = Places.GeoDataApi
                 .getAutocompletePredictions(it, constraint.toString(),

@@ -171,17 +171,18 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
         DatePickerPost = EditTextDate!!.text.toString()
         TimePickerPost = chooseTime.text.toString()
 
-        if (ImageUri == null) {
-
-            Toast.makeText(this, "Please Select post Image", Toast.LENGTH_SHORT).show()
-        }
+        // TODO(mochamadiqbaldwicahyo): 2019-10-02 post image
+//        if (ImageUri == null) {
+//
+//            Toast.makeText(this, "Please Select post Image", Toast.LENGTH_SHORT).show()
+//        }
         if (TextUtils.isEmpty(Description)) {
 
             Toast.makeText(this, "Please Write post", Toast.LENGTH_SHORT).show()
         }
         if (TextUtils.isEmpty(SpinnerDescription)) {
 
-            Toast.makeText(this, "Please Write jenis", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Please Write kategori", Toast.LENGTH_SHORT).show()
         }
         if (TextUtils.isEmpty(DatePickerPost)) {
 
@@ -196,7 +197,8 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
             loadingBar!!.setMessage("Please Wait Add New Post")
             loadingBar!!.show()
             loadingBar!!.setCanceledOnTouchOutside(true)
-            StoringImageToFirebaseStorage()
+//            StoringImageToFirebaseStorage()
+            SavingInformationToDatabase()
         }
     }
 
@@ -262,10 +264,11 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
 
                     val postMap = HashMap<String, String>()
                     postMap.put("uid", current_user_id)
+//                    postMap.put("postid", "${current_user_id.random()}")
                     postMap.put("date", saveCurrentDate)
                     postMap.put("time", saveCurrentTime)
                     postMap.put("description", Description)
-                    postMap.put("jenis", SpinnerDescription)
+                    postMap.put("kategori", SpinnerDescription)
                     postMap.put("datekajian", DatePickerPost)
                     postMap.put("timekajian", TimePickerPost)
                     postMap.put("postimage", downloadUrl)
