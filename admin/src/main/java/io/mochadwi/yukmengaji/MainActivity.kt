@@ -22,8 +22,6 @@ import com.google.firebase.database.*
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 import io.mochadwi.yukmengaji.Class.Posts
-import io.mochadwi.yukmengaji.Menu.FindFriendsActivity
-import io.mochadwi.yukmengaji.Menu.ProfileActivity
 import io.mochadwi.yukmengaji.Menu.SettingsActivity
 
 class MainActivity : AppCompatActivity() {
@@ -87,14 +85,15 @@ class MainActivity : AppCompatActivity() {
                         val fullname = dataSnapshot.child("fullname").value!!.toString()
                         NavProfileUserName!!.text = fullname
                     }
-                    if (dataSnapshot.hasChild("profileimage")) {
-                        val image = dataSnapshot.child("profileimage").value!!.toString()
-                        Picasso.with(this@MainActivity).load(image)
-                            .placeholder(R.drawable.default_profile).into(NavProfileImage)
-                    } else {
-                        Toast.makeText(this@MainActivity, "Profile name do not exists...",
-                            Toast.LENGTH_SHORT).show()
-                    }
+                    // TODO(mochamadiqbaldwicahyo): 2019-10-02 Implement profile image
+//                    if (dataSnapshot.hasChild("profileimage")) {
+//                        val image = dataSnapshot.child("profileimage").value!!.toString()
+//                        Picasso.with(this@MainActivity).load(image)
+//                            .placeholder(R.drawable.default_profile).into(NavProfileImage)
+//                    } else {
+//                        Toast.makeText(this@MainActivity, "Profile image do not exists...",
+//                            Toast.LENGTH_SHORT).show()
+//                    }
                 }
             }
 
@@ -250,54 +249,17 @@ class MainActivity : AppCompatActivity() {
         when (item.itemId) {
             R.id.nav_post -> SendUserToPostActivity()
 
-            R.id.nav_profile -> {
-                SendUserToProfileActivity()
-                Toast.makeText(this, "Profile", Toast.LENGTH_SHORT).show()
-            }
-
             R.id.nav_home -> Toast.makeText(this, "Home", Toast.LENGTH_SHORT).show()
-
-            R.id.nav_friends -> {
-                SendUserToFriendsActivity()
-                Toast.makeText(this, "Friends", Toast.LENGTH_SHORT).show()
-            }
-
-            R.id.nav_finds_friends -> {
-                SendUserToFindFriendsActivity()
-                Toast.makeText(this, "Find Friends", Toast.LENGTH_SHORT).show()
-            }
-
-            R.id.nav_messages -> Toast.makeText(this, "Messages", Toast.LENGTH_SHORT).show()
 
             R.id.nav_settings -> {
                 SendUserToSettingsActivity()
                 Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show()
             }
-
-            R.id.nav_logout -> {
-                mAuth!!.signOut()
-                SendUserToLoginActivity()
-            }
         }
-    }
-
-    private fun SendUserToFriendsActivity() {
-        val friendsIntent = Intent(this@MainActivity, FriendsActivity::class.java)
-        startActivity(friendsIntent)
     }
 
     private fun SendUserToSettingsActivity() {
         val settingIntent = Intent(this@MainActivity, SettingsActivity::class.java)
         startActivity(settingIntent)
-    }
-
-    private fun SendUserToProfileActivity() {
-        val loginIntent = Intent(this@MainActivity, ProfileActivity::class.java)
-        startActivity(loginIntent)
-    }
-
-    private fun SendUserToFindFriendsActivity() {
-        val findFriendIntent = Intent(this@MainActivity, FindFriendsActivity::class.java)
-        startActivity(findFriendIntent)
     }
 }

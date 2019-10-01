@@ -64,6 +64,7 @@ class SetupActivity : AppCompatActivity() {
             startActivityForResult(galleryIntent, Gallery_Pick)
         }
 
+        // TODO(mochamadiqbaldwicahyo): 2019-10-02 implement profile image
 /*        UserRef!!.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
 
