@@ -7,11 +7,10 @@ import android.widget.Filter
 import android.widget.Filterable
 import android.widget.Toast
 import com.google.android.gms.common.api.GoogleApiClient
-import com.google.android.gms.location.places.AutocompleteFilter
-import com.google.android.gms.location.places.Places
 import com.google.android.gms.maps.model.LatLngBounds
+import com.google.android.libraries.places.compat.AutocompleteFilter
+import com.google.android.libraries.places.compat.Places
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 class PlaceArrayAdapter(
     context: Context,
@@ -73,38 +72,35 @@ class PlaceArrayAdapter(
         mGoogleApiClient?.let {
             Log.i(TAG, "Executing autocomplete query for: $constraint")
 
-            val results = Places.GeoDataApi
-                .getAutocompletePredictions(it, constraint.toString(),
+            val results = Places.getGeoDataClient(context)
+                .getAutocompletePredictions(constraint.toString(),
                     mBounds, mPlaceFilter)
 
-            // Wait for predictions, set the timeout.
-            val autocompletePredictions = results
-                .await(60, TimeUnit.SECONDS)
+            // Wait for predictions, set the timeout
+            if (results.isSuccessful) {
+                val autocompletePredictions = results.result
 
-            val status = autocompletePredictions.status
-            if (!status.isSuccess) {
-                Toast.makeText(context, "Error: $status",
+                Log.i(TAG, "Query completed. Received " + autocompletePredictions?.count +
+                    " predictions.")
+                val iterator = autocompletePredictions?.iterator()
+                val resultList = ArrayList<PlaceAutocomplete>(autocompletePredictions?.count ?: 0)
+                while (iterator?.hasNext() == true) {
+                    iterator.next()?.let { prediction ->
+                        resultList.add(
+                            PlaceAutocomplete(prediction.placeId ?: "",
+                                prediction.getFullText(null) ?: ""))
+                    }
+                }
+                // Buffer release
+                autocompletePredictions?.release()
+                return resultList
+            } else {
+
+                Toast.makeText(context, "Error: ${results.exception?.message}",
                     Toast.LENGTH_SHORT).show()
-                Log.e(TAG, "Error getting place predictions: " + status
-                    .toString())
-                autocompletePredictions.release()
+                Log.e(TAG, "Error getting place predictions: ${results.exception?.message}")
                 return null
             }
-
-            Log.i(TAG, "Query completed. Received " + autocompletePredictions.count +
-                " predictions.")
-            val iterator = autocompletePredictions.iterator()
-            val resultList = ArrayList<PlaceAutocomplete>(autocompletePredictions.count)
-            while (iterator.hasNext()) {
-                iterator.next()?.let { prediction ->
-                    resultList.add(
-                        PlaceAutocomplete(prediction.placeId ?: "",
-                            prediction.getFullText(null) ?: ""))
-                }
-            }
-            // Buffer release
-            autocompletePredictions.release()
-            return resultList
         }
 
         Log.e(TAG, "Google API client is not connected.")

@@ -14,11 +14,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
-import com.google.android.gms.common.api.ResultCallback
-import com.google.android.gms.location.places.PlaceBuffer
-import com.google.android.gms.location.places.Places
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
+import com.google.android.libraries.places.compat.PlaceBufferResponse
+import com.google.android.libraries.places.compat.Places
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
@@ -74,26 +73,25 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
 
     private var countPosts: Long = 0
 
+    //    private lateinit var placesClient: PlacesClient
     private val mAutocompleteClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
         val item = mPlaceArrayAdapter!!.getItem(position)
         val placeId = item!!.placeId.toString()
         Log.i(TAG, "Selected: " + item.description)
-        val placeResult = Places.GeoDataApi
-            .getPlaceById(mGoogleApiClient, placeId)
-        placeResult.setResultCallback(mUpdatePlaceDetailsCallback)
-        Log.i(TAG, "Fetching details for ID: " + item.placeId)
-    }
+        val placeResult = Places.getGeoDataClient(this)
+            .getPlaceById(placeId)
+        placeResult.addOnSuccessListener { places: PlaceBufferResponse ->
+            // Selecting the first object buffer.
+            val place = places.get(0)
+            val attributions = places.attributions
 
-    private val mUpdatePlaceDetailsCallback = ResultCallback<PlaceBuffer> { places ->
-        if (!places.status.isSuccess) {
-            Log.e(TAG, "Place query did not complete. Error: " + places.status.toString())
-            return@ResultCallback
+            // mNameView.setText(Html.fromHtml(place.getAddress() + ""));
         }
-        // Selecting the first object buffer.
-        val place = places.get(0)
-        val attributions = places.attributions
-
-        // mNameView.setText(Html.fromHtml(place.getAddress() + ""));
+        placeResult.addOnFailureListener fail@{
+            Log.e(TAG, "Place query did not complete. Error: ${it.message}")
+            return@fail
+        }
+        Log.i(TAG, "Fetching details for ID: " + item.placeId)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -102,6 +100,8 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
 
         mAuth = FirebaseAuth.getInstance()
         current_user_id = mAuth!!.currentUser!!.uid
+
+//        setupPlaces()
 
         PostImagesReference = FirebaseStorage.getInstance().reference
         userRef = FirebaseDatabase.getInstance().reference.child("Users")
@@ -129,7 +129,7 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
         mAutocompleteTextView!!.threshold = 3
 
         mGoogleApiClient = GoogleApiClient.Builder(this@PostActivity)
-            .addApi(Places.GEO_DATA_API)
+            .addApi(com.google.android.gms.location.places.Places.GEO_DATA_API)
             .enableAutoManage(this, GOOGLE_API_CLIENT_ID, this)
             .addConnectionCallbacks(this)
             .build()
@@ -163,6 +163,49 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
 
         UpdatePostButton!!.setOnClickListener { ValidatePostInfo() }
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == Gallery_Pick && resultCode == RESULT_OK && data != null) {
+
+            ImageUri = data.data
+            SelectPostImage!!.setImageURI(ImageUri)
+        }
+
+/*
+        if (requestCode == AUTOCOMPLETE_REQUEST_CODE && data != null) {
+            if (resultCode == RESULT_OK) {
+                val place = Autocomplete.getPlaceFromIntent(data)
+                Toast.makeText(this, "Place: ${place.name}, ${place.id}", Toast.LENGTH_SHORT)
+                    .show()
+                Log.i(TAG, "Place: ${place.name}, ${place.id}")
+            } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+                // TODO: Handle the error.
+                val status = Autocomplete.getStatusFromIntent(data)
+                Toast.makeText(this, "${status.statusMessage}", Toast.LENGTH_SHORT)
+                    .show()
+                Log.i(TAG, "${status.statusMessage}")
+            }
+        }
+*/
+    }
+
+/*
+    private fun setupPlaces() {
+        // Initialize Places.
+        Places.initialize(applicationContext, getString(R.string.google_maps_key))
+        placesClient = Places.createClient(this)
+
+        // Set the fields to specify which types of place data to return.
+        val fields = listOf(Place.Field.ID, Place.Field.NAME)
+
+        // Start the autocomplete intent.
+        val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields)
+            .build(this)
+        startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE)
+    }
+*/
 
     private fun ValidatePostInfo() {
 
@@ -309,16 +352,6 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
         startActivityForResult(galleryIntent, Gallery_Pick)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == Gallery_Pick && resultCode == RESULT_OK && data != null) {
-
-            ImageUri = data.data
-            SelectPostImage!!.setImageURI(ImageUri)
-        }
-    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         val id = item.itemId
@@ -382,5 +415,6 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
             LatLng(37.430610, -121.972090))
 
         internal val Gallery_Pick = 1
+        val AUTOCOMPLETE_REQUEST_CODE = 99
     }
 }
