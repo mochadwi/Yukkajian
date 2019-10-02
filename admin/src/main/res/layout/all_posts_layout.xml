@@ -100,7 +100,6 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:visibility="go"
                 android:id="@+id/post_profile_image"
                 android:layout_width="65dp"
                 android:layout_height="65dp"

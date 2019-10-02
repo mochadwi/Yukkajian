@@ -55,7 +55,6 @@ class ClickPostActivity : AppCompatActivity() {
                 if (dataSnapshot.exists()) {
 
                     description = dataSnapshot.child("description").value!!.toString()
-                    image = dataSnapshot.child("postimage").value!!.toString()
                     databaseUserId = dataSnapshot.child("uid").value!!.toString()
 
                     PostDescription!!.text = description

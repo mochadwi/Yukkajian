@@ -111,6 +111,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(newPostIntent)
         }
 
+
         DisplayAllUsersPosts()
     }
 
@@ -148,6 +149,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
         postList!!.adapter = firebaseRecyclerAdapter
+        findViewById<TextView>(R.id.tv_users_post_empty).visibility = View.GONE
     }
 
     class PostsViewHolder(internal var mView: View) : RecyclerView.ViewHolder(mView) {
