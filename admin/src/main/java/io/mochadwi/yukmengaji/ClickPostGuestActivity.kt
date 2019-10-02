@@ -1,5 +1,7 @@
 package io.mochadwi.yukmengaji
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -71,5 +73,10 @@ class ClickPostGuestActivity : AppCompatActivity() {
 
     private fun GoToMapsPost() {
         Toast.makeText(this, "Send to google maps.", Toast.LENGTH_SHORT).show()
+
+        val gmmIntentUri = Uri.parse("google.navigation:q=Masjid Agung Trans Studio&mode=d")
+        val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+        mapIntent.setPackage("com.google.android.apps.maps")
+        startActivity(mapIntent)
     }
 }
