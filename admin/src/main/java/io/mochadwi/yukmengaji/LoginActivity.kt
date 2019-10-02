@@ -24,9 +24,12 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+
         loadingBar = ProgressDialog(this)
 
         mAuth = FirebaseAuth.getInstance()
+
+        signInAnonymous()
 
         // Configure Google Sign In
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -43,6 +46,29 @@ class LoginActivity : AppCompatActivity() {
             .build()
 
         google_signin_button.setOnClickListener { signIn() }
+    }
+
+    private fun signInAnonymous() {
+        if (BuildConfig.FLAVOR.contains("user")) {
+            mAuth?.signInAnonymously()
+                ?.addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d(TAG, "signInAnonymously:success")
+
+                        val user = mAuth?.currentUser
+
+                        SendGuestToMainActivity()
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w(TAG, "signInAnonymously:failure", task.exception)
+                        Toast.makeText(baseContext, "Authentication failed.",
+                            Toast.LENGTH_SHORT).show()
+                    }
+
+                    // ...
+                }
+        }
     }
 
     private fun signIn() {
@@ -87,7 +113,7 @@ class LoginActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "signInWithCredential:success")
-                    SendUserToMainActivity()
+                    SendAdminToMainActivity()
                     loadingBar!!.dismiss()
                 } else {
                     // If sign in fails, display a message to the user.
@@ -109,11 +135,23 @@ class LoginActivity : AppCompatActivity() {
         val currentUser = mAuth!!.currentUser
         if (currentUser != null) {
 
-            SendUserToMainActivity()
+            if (BuildConfig.FLAVOR.contains("user")) {
+                SendGuestToMainActivity()
+            } else {
+                SendAdminToMainActivity()
+            }
         }
     }
 
-    private fun SendUserToMainActivity() {
+    private fun SendGuestToMainActivity() {
+
+        val mainIntent = Intent(this@LoginActivity, MainGuestActivity::class.java)
+        mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(mainIntent)
+        finish()
+    }
+
+    private fun SendAdminToMainActivity() {
 
         val mainIntent = Intent(this@LoginActivity, MainActivity::class.java)
         mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)

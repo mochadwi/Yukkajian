@@ -27,6 +27,27 @@ android {
     lintOptions {
         abortOnError false
     }
+
+    // Specifies one flavor dimension.
+    flavorDimensions "version"
+    productFlavors {
+        admin {
+            // Assigns this product flavor to the "version" flavor dimension.
+            // If you are using only one dimension, this property is optional,
+            // and the plugin automatically assigns all the module's flavors to
+            // that dimension.
+            dimension "version"
+            versionNameSuffix "-admin"
+            resValue "string", "app_name", "YukMengaji - Admin"
+        }
+
+        user {
+            dimension "version"
+            applicationIdSuffix ".user"
+            versionNameSuffix "-user"
+            resValue "string", "app_name", "YukMengaji - User"
+        }
+    }
 }
 
 dependencies {
