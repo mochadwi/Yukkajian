@@ -240,7 +240,7 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
             loadingBar!!.setMessage("Please Wait Add New Post")
             loadingBar!!.show()
             loadingBar!!.setCanceledOnTouchOutside(true)
-//            StoringImageToFirebaseStorage()
+            StoringImageToFirebaseStorage()
             SavingInformationToDatabase()
         }
     }
@@ -257,26 +257,27 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
 
         postRandomName = saveCurrentDate!! + saveCurrentTime!!
 
-        val filepath = PostImagesReference!!.child("Posts Images")
-            .child(ImageUri!!.lastPathSegment + postRandomName + ".jpg")
-        filepath.putFile(ImageUri!!).addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-
-                filepath.downloadUrl.addOnSuccessListener {
-                    downloadUrl = it.toString()
-
-                    Toast.makeText(this@PostActivity, "Image Upload Success", Toast.LENGTH_SHORT)
-                        .show()
-
-                    SavingInformationToDatabase()
-                }
-            } else {
-
-                val message = task.exception!!.message
-                Toast.makeText(this@PostActivity, "Error occured$message", Toast.LENGTH_SHORT)
-                    .show()
-            }
-        }
+        // TODO(mochamadiqbaldwicahyo): 2019-10-02 post image impl
+//        val filepath = PostImagesReference!!.child("Posts Images")
+//            .child(ImageUri!!.lastPathSegment + postRandomName + ".jpg")
+//        filepath.putFile(ImageUri!!).addOnCompleteListener { task ->
+//            if (task.isSuccessful) {
+//
+//                filepath.downloadUrl.addOnSuccessListener {
+//                    downloadUrl = it.toString()
+//
+//                    Toast.makeText(this@PostActivity, "Image Upload Success", Toast.LENGTH_SHORT)
+//                        .show()
+//
+//                    SavingInformationToDatabase()
+//                }
+//            } else {
+//
+//                val message = task.exception!!.message
+//                Toast.makeText(this@PostActivity, "Error occured$message", Toast.LENGTH_SHORT)
+//                    .show()
+//            }
+//        }
     }
 
     private fun SavingInformationToDatabase() {
@@ -302,8 +303,8 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
 
                 if (dataSnapshot.exists()) {
 
-                    val userFullName = dataSnapshot.child("fullname").value!!.toString()
-                    val userProfileImage = dataSnapshot.child("profileimage").value!!.toString()
+                    val userFullName = "${dataSnapshot.child("fullname").value}"
+                    val userProfileImage = "${dataSnapshot.child("profileimage").value}"
 
                     val postMap = HashMap<String, String>()
                     postMap.put("uid", current_user_id)
@@ -314,8 +315,8 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
                     postMap.put("kategori", SpinnerDescription)
                     postMap.put("datekajian", DatePickerPost)
                     postMap.put("timekajian", TimePickerPost)
-                    postMap.put("postimage", downloadUrl)
-                    postMap.put("profileimage", userProfileImage)
+//                    postMap.put("postimage", downloadUrl)
+//                    postMap.put("profileimage", userProfileImage)
                     postMap.put("fullname", userFullName)
                     postMap.put("counter", "$countPosts")
 

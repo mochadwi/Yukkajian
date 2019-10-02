@@ -137,8 +137,8 @@ class MainActivity : AppCompatActivity() {
                 viewHolder.setTime(model.time)
                 viewHolder.setDate(model.date)
                 viewHolder.setDescription(model.description)
-                viewHolder.setProfileimage(applicationContext, model.profileimage)
-                viewHolder.setPostimage(applicationContext, model.postimage)
+//                viewHolder.setProfileimage(applicationContext, model.profileimage)
+//                viewHolder.setPostimage(applicationContext, model.postimage)
 
                 viewHolder.mView.setOnClickListener {
                     val clickPostIntent = Intent(this@MainActivity, ClickPostActivity::class.java)
