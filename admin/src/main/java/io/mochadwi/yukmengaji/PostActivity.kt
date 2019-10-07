@@ -12,6 +12,9 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import com.android.volley.Response
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.maps.model.LatLng
@@ -334,10 +337,11 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
                         .updateChildren(postMap.toMap())
                         .addOnCompleteListener { task ->
                             if (task.isSuccessful) {
-
-                                SendUserToMainActivity()
+                                shareSocmed()
+                                sendPushNotif()
                                 Toast.makeText(this@PostActivity, "Posts Update Succesfully",
                                     Toast.LENGTH_SHORT).show()
+                                SendUserToMainActivity()
                                 loadingBar!!.dismiss()
                             } else {
 
@@ -353,6 +357,50 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
             override fun onCancelled(databaseError: DatabaseError) {
             }
         })
+    }
+
+    private fun shareSocmed() {
+        val shareBody = "Here is the share kajian body"
+        val sharingIntent = Intent(Intent.ACTION_SEND)
+        sharingIntent.setType("text/plain")
+        sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Subject Here")
+        sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBody)
+        startActivity(Intent.createChooser(sharingIntent, "Berbagi ke platform berikut"))
+    }
+
+    private fun sendPushNotif() {
+        val mRequestQue = Volley.newRequestQueue(this)
+
+        val json = JSONObject()
+        try {
+            json.put("to", "/topics/" + "all")
+            val notificationObj = JSONObject()
+            notificationObj.put("title", "New Kajian")
+            notificationObj.put("body", "New kajian from : ${current_user_id}")
+            // replace notification with data when went send data
+            json.put("notification", notificationObj)
+
+            val URL = "https://fcm.googleapis.com/fcm/send"
+            val request = object : JsonObjectRequest(
+                Method.POST,
+                URL,
+                json,
+                Response.Listener { response -> Log.d("MUR", "onResponse: $response") },
+                Response.ErrorListener { error ->
+                    Log.d("MUR", "onError: " + error.networkResponse)
+                }) {
+                override fun getHeaders(): Map<String, String> {
+                    val header = HashMap<String, String>()
+                    header["content-type"] = "application/json"
+                    header["authorization"] = "key=AAAAD9qeNQM:APA91bHbsSyd149hjZViFEJ77zf5ay8z-R6VIRZ-6y36uSrXPd7m0bzrtnL7WXaAVPvBLsj_shWsSPiqn1-_jtTyUFXa6aqhpGWZrv6y5lW5d6cqBi7tz33br2uu-y1ZlwiYlp8VSbKP"
+                    return header
+                }
+            }
+
+            mRequestQue.add(request)
+        } catch (e: JSONException) {
+            e.printStackTrace()
+        }
     }
 
     private fun OpenGallery() {

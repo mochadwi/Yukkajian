@@ -3,21 +3,29 @@ package io.mochadwi.yukmengaji
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.database.FirebaseRecyclerAdapter
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.messaging.FirebaseMessaging
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 import io.mochadwi.yukmengaji.Class.Posts
 
 class MainGuestActivity : AppCompatActivity() {
+    companion object {
+        val TAG = this::class.java.simpleName
+    }
 
     private var postList: RecyclerView? = null
     private var mToolbar: Toolbar? = null
@@ -31,6 +39,8 @@ class MainGuestActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_guest)
+
+        cloudMessaging()
 
         mAuth = FirebaseAuth.getInstance()
         currentUserID = mAuth!!.currentUser!!.uid
@@ -76,6 +86,32 @@ class MainGuestActivity : AppCompatActivity() {
         DisplayAllUsersPosts()
     }
 
+    private fun cloudMessaging() {
+        FirebaseMessaging.getInstance().subscribeToTopic("all")
+            .addOnCompleteListener { task ->
+                var msg = "Subscribed to all info"
+                if (!task.isSuccessful) {
+                    msg = "Failed to subscribe"
+                }
+                Log.d(TAG, msg)
+                Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
+            }
+
+        FirebaseInstanceId.getInstance().instanceId
+            .addOnCompleteListener(OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.w(TAG, "getInstanceId failed", task.exception)
+                    return@OnCompleteListener
+                }
+
+                // Get new Instance ID token
+                val token = task.result?.token
+
+                // Log and toast
+                Log.d(TAG, "$token")
+                Toast.makeText(baseContext, token, Toast.LENGTH_SHORT).show()
+            })
+    }
     private fun DisplayAllUsersPosts() {
 
         val SortPostInDescendingOrder = PostsRef!!.orderByChild("counter")
