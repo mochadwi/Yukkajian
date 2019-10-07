@@ -131,6 +131,8 @@ class MainGuestActivity : AppCompatActivity() {
 
                 val PostKey = getRef(position).key ?: "PostKey"
 
+                viewHolder.setCategory(model.category)
+                viewHolder.setUstadz(model.pemateri)
                 viewHolder.setFullname(model.fullname)
                 viewHolder.setTime(model.time)
                 viewHolder.setDate(model.date)
@@ -156,6 +158,18 @@ class MainGuestActivity : AppCompatActivity() {
 
         init {
             currentUserId = FirebaseAuth.getInstance().currentUser!!.uid
+        }
+
+        fun setCategory(category: String) {
+            (mView.findViewById<View>(R.id.post_category) as TextView).apply {
+                text = category
+            }
+        }
+
+        fun setUstadz(ustadz: String) {
+            (mView.findViewById<View>(R.id.post_ustadz) as TextView).apply {
+                text = ustadz
+            }
         }
 
         fun setFullname(fullname: String) {

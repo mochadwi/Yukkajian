@@ -2,8 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent" android:layout_height="wrap_content">
 
 
     <androidx.cardview.widget.CardView
@@ -40,16 +40,58 @@
                 app:srcCompat="@android:color/darker_gray" />
 
             <TextView
+                android:id="@+id/post_ustadz"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif"
+                android:text="Ustadz Name"
+                android:textAlignment="viewStart"
+                android:textAllCaps="true"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/post_date"/>
+
+            <TextView
                 android:id="@+id/click_post_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
                 android:fontFamily="sans-serif"
-                android:text="Lorem ipsum dolor sit amet, soluta regione urbanitas vis in, qui elit populo ut."
+                tools:text="@tools:sample/lorem"
                 android:textAlignment="viewStart"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/click_post_image" />
+                app:layout_constraintTop_toBottomOf="@id/post_ustadz"/>
+
+            <TextView
+                android:id="@+id/post_user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="sans-serif"
+                android:text="Username"
+                android:textAlignment="viewStart"
+                android:layout_marginStart="16dp"
+                android:textAllCaps="false"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/post_profile_image"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/post_category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif"
+                android:text="Umum"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="@id/post_user_name"
+                app:layout_constraintTop_toBottomOf="@id/post_user_name"/>
 
             <TextView
                 android:id="@+id/post_time"
@@ -59,49 +101,23 @@
                 android:fontFamily="sans-serif"
                 android:text="Time"
                 android:textSize="14sp"
-                app:layout_constraintStart_toEndOf="@+id/post_update"
-                app:layout_constraintTop_toBottomOf="@+id/post_user_name" />
+                app:layout_constraintStart_toEndOf="@id/post_date"
+                app:layout_constraintTop_toBottomOf="@id/post_category"/>
 
             <TextView
                 android:id="@+id/post_date"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
                 android:fontFamily="sans-serif"
                 android:text="Date"
                 android:textAlignment="viewStart"
-                app:layout_constraintStart_toEndOf="@+id/post_profile_image"
-                app:layout_constraintTop_toBottomOf="@+id/post_update" />
-
-            <TextView
-                android:id="@+id/post_update"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:fontFamily="sans-serif"
-                android:text="Has been update posts"
-                android:textSize="14sp"
-                app:layout_constraintStart_toEndOf="@+id/post_profile_image"
-                app:layout_constraintTop_toBottomOf="@+id/post_user_name" />
-
-            <TextView
-                android:id="@+id/post_user_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:fontFamily="sans-serif"
-                android:text="Username"
-                android:textAlignment="viewStart"
-                android:textAllCaps="false"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toEndOf="@+id/post_profile_image"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintStart_toStartOf="@id/post_user_name"
+                app:layout_constraintTop_toBottomOf="@id/post_category"/>
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/post_profile_image"
                 android:layout_width="65dp"
+                android:visibility="gone"
                 android:layout_height="65dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"

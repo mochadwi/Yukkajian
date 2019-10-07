@@ -6,6 +6,8 @@ data class Posts(
     var date: String = "",
     var postimage: String = "",
     var description: String = "",
+    var pemateri: String = "",
+    var category: String = "",
     var fullname: String = "",
     var profileimage: String = ""
 )
