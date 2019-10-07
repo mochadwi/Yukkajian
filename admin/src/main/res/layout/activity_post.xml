@@ -42,7 +42,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:background="@drawable/post_background_edittext"
         android:ems="10"
         android:hint="Judul Kajian"
@@ -52,6 +52,22 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/select_post_image"/>
+
+    <EditText
+        android:id="@+id/click_post_ustadz"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/post_background_edittext"
+        android:ems="10"
+        android:hint="Ustadz Name"
+        android:inputType="date"
+        android:padding="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/click_post_description"/>
 
     <Spinner
         android:id="@+id/update_post_spinner"
@@ -63,7 +79,7 @@
         android:background="@drawable/post_background_edittext"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/click_post_description"/>
+        app:layout_constraintTop_toBottomOf="@id/click_post_ustadz"/>
 
     <EditText
         android:id="@+id/update_post_date"

@@ -24,6 +24,9 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import io.mochadwi.yukmengaji.Adapter.PlaceArrayAdapter
 import io.mochadwi.yukmengaji.Class.DateDialog
+import kotlinx.android.synthetic.main.activity_post.*
+import org.json.JSONException
+import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -56,6 +59,7 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
     private var ImageUri: Uri? = null
 
     private lateinit var Description: String
+    private lateinit var Pemateri: String
     private lateinit var SpinnerDescription: String
     private lateinit var DatePickerPost: String
     private lateinit var TimePickerPost: String
@@ -113,7 +117,7 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
 
         EditTextDate = findViewById<View>(R.id.update_post_date) as EditText
         PostSpinner = findViewById<View>(R.id.update_post_spinner) as Spinner
-        val jenis = arrayOf("Umum", "Ikhwan", "Ahkwat")
+        val jenis = arrayOf("Kategori", "Umum", "Ikhwan", "Ahkwat")
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, jenis)
         PostSpinner!!.adapter = adapter
 
@@ -210,6 +214,7 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
     private fun ValidatePostInfo() {
 
         Description = PostDescription!!.text.toString()
+        Pemateri = "${click_post_ustadz.text}"
         SpinnerDescription = PostSpinner!!.selectedItem.toString()
         DatePickerPost = EditTextDate!!.text.toString()
         TimePickerPost = chooseTime.text.toString()
@@ -220,6 +225,10 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
 //            Toast.makeText(this, "Please Select post Image", Toast.LENGTH_SHORT).show()
 //        }
         if (TextUtils.isEmpty(Description)) {
+
+            Toast.makeText(this, "Please Write post", Toast.LENGTH_SHORT).show()
+        }
+        if (TextUtils.isEmpty(Pemateri)) {
 
             Toast.makeText(this, "Please Write post", Toast.LENGTH_SHORT).show()
         }
@@ -312,6 +321,7 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
                     postMap.put("date", saveCurrentDate)
                     postMap.put("time", saveCurrentTime)
                     postMap.put("description", Description)
+                    postMap.put("pemateri", Pemateri)
                     postMap.put("kategori", SpinnerDescription)
                     postMap.put("datekajian", DatePickerPost)
                     postMap.put("timekajian", TimePickerPost)
