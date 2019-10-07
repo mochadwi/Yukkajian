@@ -112,10 +112,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/update_post_date"/>
 
-    <!--
-    todo use auto complete to determine location
-    -->
-    <AutoCompleteTextView
+    <TextView
         android:id="@+id/update_post_place"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -130,6 +127,24 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/update_post_time"/>
+
+    <!--
+        <AutoCompleteTextView
+            android:id="@+id/update_post_place"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/post_background_edittext"
+            android:hint="Select Places"
+            android:inputType="textCapSentences|textMultiLine"
+            android:padding="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/update_post_time"/>
+    -->
 
     <Button
         android:id="@+id/update_post_button"

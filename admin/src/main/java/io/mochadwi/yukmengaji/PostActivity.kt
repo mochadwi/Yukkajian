@@ -19,13 +19,16 @@ import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
-import com.google.android.libraries.places.compat.PlaceBufferResponse
-import com.google.android.libraries.places.compat.Places
+import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.api.net.PlacesClient
+import com.google.android.libraries.places.widget.Autocomplete
+import com.google.android.libraries.places.widget.AutocompleteActivity
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import io.mochadwi.yukmengaji.Adapter.PlaceArrayAdapter
 import io.mochadwi.yukmengaji.Class.DateDialog
 import kotlinx.android.synthetic.main.activity_post.*
 import org.json.JSONException
@@ -46,10 +49,8 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
 
     private var EditTextDate: EditText? = null
     private var PostSpinner: Spinner? = null
-    private var mAutocompleteTextView: AutoCompleteTextView? = null
 
     private lateinit var mGoogleApiClient: GoogleApiClient
-    private var mPlaceArrayAdapter: PlaceArrayAdapter? = null
     // Batas
 
     // Time Declaration
@@ -80,26 +81,7 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
 
     private var countPosts: Long = 0
 
-    //    private lateinit var placesClient: PlacesClient
-    private val mAutocompleteClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
-        val item = mPlaceArrayAdapter!!.getItem(position)
-        val placeId = item!!.placeId.toString()
-        Log.i(TAG, "Selected: " + item.description)
-        val placeResult = Places.getGeoDataClient(this)
-            .getPlaceById(placeId)
-        placeResult.addOnSuccessListener { places: PlaceBufferResponse ->
-            // Selecting the first object buffer.
-            val place = places.get(0)
-            val attributions = places.attributions
-
-            // mNameView.setText(Html.fromHtml(place.getAddress() + ""));
-        }
-        placeResult.addOnFailureListener fail@{
-            Log.e(TAG, "Place query did not complete. Error: ${it.message}")
-            return@fail
-        }
-        Log.i(TAG, "Fetching details for ID: " + item.placeId)
-    }
+    private lateinit var placesClient: PlacesClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -107,8 +89,6 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
 
         mAuth = FirebaseAuth.getInstance()
         current_user_id = mAuth!!.currentUser!!.uid
-
-//        setupPlaces()
 
         PostImagesReference = FirebaseStorage.getInstance().reference
         userRef = FirebaseDatabase.getInstance().reference.child("Users")
@@ -130,21 +110,6 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
         setSupportActionBar(mToolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setTitle("Update Post")
-
-        // Place Adapter
-        mAutocompleteTextView = findViewById<View>(R.id.update_post_place) as AutoCompleteTextView
-        mAutocompleteTextView!!.threshold = 3
-
-        mGoogleApiClient = GoogleApiClient.Builder(this@PostActivity)
-            .addApi(com.google.android.gms.location.places.Places.GEO_DATA_API)
-            .enableAutoManage(this, GOOGLE_API_CLIENT_ID, this)
-            .addConnectionCallbacks(this)
-            .build()
-
-        mAutocompleteTextView!!.onItemClickListener = mAutocompleteClickListener
-        mPlaceArrayAdapter = PlaceArrayAdapter(this, android.R.layout.simple_list_item_1,
-            BOUNDS_MOUNTAIN_VIEW, null)
-        mAutocompleteTextView!!.setAdapter<PlaceArrayAdapter>(mPlaceArrayAdapter)
 
         // Time AutoPicker
         chooseTime = findViewById(R.id.update_post_time)
@@ -169,6 +134,10 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
         SelectPostImage!!.setOnClickListener { OpenGallery() }
 
         UpdatePostButton!!.setOnClickListener { ValidatePostInfo() }
+
+        update_post_place.setOnClickListener {
+            setupPlaces()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -180,39 +149,35 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
             SelectPostImage!!.setImageURI(ImageUri)
         }
 
-/*
         if (requestCode == AUTOCOMPLETE_REQUEST_CODE && data != null) {
             if (resultCode == RESULT_OK) {
                 val place = Autocomplete.getPlaceFromIntent(data)
-                Toast.makeText(this, "Place: ${place.name}, ${place.id}", Toast.LENGTH_SHORT)
+                Toast.makeText(this, "Place: ${place.id}, ${place.name}, ${place.latLng}",
+                    Toast.LENGTH_SHORT)
                     .show()
-                Log.i(TAG, "Place: ${place.name}, ${place.id}")
             } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
-                // TODO: Handle the error.
                 val status = Autocomplete.getStatusFromIntent(data)
                 Toast.makeText(this, "${status.statusMessage}", Toast.LENGTH_SHORT)
                     .show()
                 Log.i(TAG, "${status.statusMessage}")
             }
         }
-*/
     }
 
-/*
     private fun setupPlaces() {
         // Initialize Places.
         Places.initialize(applicationContext, getString(R.string.google_maps_key))
-        placesClient = Places.createClient(this)
+        val placesClient = Places.createClient(this)
 
         // Set the fields to specify which types of place data to return.
-        val fields = listOf(Place.Field.ID, Place.Field.NAME)
+        val fields = listOf(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG)
 
         // Start the autocomplete intent.
-        val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields)
+        val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
+            .setCountry("ID")
             .build(this)
         startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE)
     }
-*/
 
     private fun ValidatePostInfo() {
 
@@ -263,7 +228,6 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
         val currentDate = SimpleDateFormat("dd-MM-yyyy")
         saveCurrentDate = currentDate.format(calForDate.time)
 
-        val calForTime = Calendar.getInstance()
         val currentTime = SimpleDateFormat("HH:mm")
         saveCurrentTime = currentTime.format(calForDate.time)
 
@@ -331,6 +295,7 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
 //                    postMap.put("postimage", downloadUrl)
 //                    postMap.put("profileimage", userProfileImage)
                     postMap.put("fullname", userFullName)
+                    postMap.put("latlong", userFullName)
                     postMap.put("counter", "$countPosts")
 
                     PostsRef!!.child(current_user_id!! + postRandomName!!)
@@ -446,12 +411,10 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
 
     override fun onConnected(bundle: Bundle?) {
 
-        mPlaceArrayAdapter!!.setGoogleApiClient(mGoogleApiClient)
         Log.i(TAG, "Google Places API connected.")
     }
 
     override fun onConnectionSuspended(i: Int) {
-        mPlaceArrayAdapter!!.setGoogleApiClient(null)
         Log.e(TAG, "Google Places API connection suspended.")
     }
 
