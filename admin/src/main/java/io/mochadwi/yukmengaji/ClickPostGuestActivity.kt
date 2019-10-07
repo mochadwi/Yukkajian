@@ -29,6 +29,7 @@ class ClickPostGuestActivity : AppCompatActivity() {
     private var currentUserId: String? = null
     private var databaseUserId: String? = null
     private var description: String? = null
+    private var latLong: String? = null
     private var image: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,9 +55,11 @@ class ClickPostGuestActivity : AppCompatActivity() {
 
                     description = dataSnapshot.child("description").value!!.toString()
                     databaseUserId = dataSnapshot.child("uid").value!!.toString()
+                    latLong = dataSnapshot.child("latlong").value!!.toString()
 
                     PostDescription!!.text = description
                     Picasso.with(this@ClickPostGuestActivity).load(image).into(PostImage)
+
 
                     if (currentUserId == databaseUserId) {
 
@@ -74,7 +77,7 @@ class ClickPostGuestActivity : AppCompatActivity() {
     private fun GoToMapsPost() {
         Toast.makeText(this, "Send to google maps.", Toast.LENGTH_SHORT).show()
 
-        val gmmIntentUri = Uri.parse("google.navigation:q=Masjid Agung Trans Studio&mode=d")
+        val gmmIntentUri = Uri.parse("google.navigation:q=$latLong&mode=d")
         val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
         mapIntent.setPackage("com.google.android.apps.maps")
         startActivity(mapIntent)

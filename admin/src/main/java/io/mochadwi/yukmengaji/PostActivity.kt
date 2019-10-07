@@ -67,6 +67,7 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
     private lateinit var SpinnerDescription: String
     private lateinit var DatePickerPost: String
     private lateinit var TimePickerPost: String
+    private lateinit var LatLong: String
 
     private var PostImagesReference: StorageReference? = null
     private var userRef: DatabaseReference? = null
@@ -155,6 +156,8 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
                 Toast.makeText(this, "Place: ${place.id}, ${place.name}, ${place.latLng}",
                     Toast.LENGTH_SHORT)
                     .show()
+                update_post_place.text = place.name
+                LatLong = "${place.latLng?.latitude},${place.latLng?.longitude}"
             } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
                 val status = Autocomplete.getStatusFromIntent(data)
                 Toast.makeText(this, "${status.statusMessage}", Toast.LENGTH_SHORT)
@@ -174,6 +177,7 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
 
         // Start the autocomplete intent.
         val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
+//            .setTypeFilter(TypeFilter.REGIONS)
             .setCountry("ID")
             .build(this)
         startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE)
@@ -192,6 +196,10 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
 //
 //            Toast.makeText(this, "Please Select post Image", Toast.LENGTH_SHORT).show()
 //        }
+        if (TextUtils.isEmpty(update_post_place.text)) {
+
+            Toast.makeText(this, "Please Set your location", Toast.LENGTH_SHORT).show()
+        }
         if (TextUtils.isEmpty(Description)) {
 
             Toast.makeText(this, "Please Write post", Toast.LENGTH_SHORT).show()
@@ -295,7 +303,7 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
 //                    postMap.put("postimage", downloadUrl)
 //                    postMap.put("profileimage", userProfileImage)
                     postMap.put("fullname", userFullName)
-                    postMap.put("latlong", userFullName)
+                    postMap.put("latlong", LatLong)
                     postMap.put("counter", "$countPosts")
 
                     PostsRef!!.child(current_user_id!! + postRandomName!!)

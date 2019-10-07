@@ -134,6 +134,8 @@ class MainActivity : AppCompatActivity() {
 
                 val PostKey = getRef(position).key ?: "PostKey"
 
+                viewHolder.setCategory(model.category)
+                viewHolder.setUstadz(model.pemateri)
                 viewHolder.setFullname(model.fullname)
                 viewHolder.setTime(model.time)
                 viewHolder.setDate(model.date)
@@ -142,7 +144,8 @@ class MainActivity : AppCompatActivity() {
 //                viewHolder.setPostimage(applicationContext, model.postimage)
 
                 viewHolder.mView.setOnClickListener {
-                    val clickPostIntent = Intent(this@MainActivity, ClickPostActivity::class.java)
+                    val clickPostIntent = Intent(this@MainActivity,
+                        ClickPostGuestActivity::class.java)
                     clickPostIntent.putExtra("PostKey", PostKey)
                     startActivity(clickPostIntent)
                 }
@@ -158,6 +161,18 @@ class MainActivity : AppCompatActivity() {
 
         init {
             currentUserId = FirebaseAuth.getInstance().currentUser!!.uid
+        }
+
+        fun setCategory(category: String) {
+            (mView.findViewById<View>(R.id.post_category) as TextView).apply {
+                text = category
+            }
+        }
+
+        fun setUstadz(ustadz: String) {
+            (mView.findViewById<View>(R.id.post_ustadz) as TextView).apply {
+                text = ustadz
+            }
         }
 
         fun setFullname(fullname: String) {
