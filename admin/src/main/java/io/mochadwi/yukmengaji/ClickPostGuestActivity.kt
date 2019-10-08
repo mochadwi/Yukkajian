@@ -55,7 +55,7 @@ class ClickPostGuestActivity : AppCompatActivity() {
 
                     description = dataSnapshot.child("description").value!!.toString()
                     databaseUserId = dataSnapshot.child("uid").value!!.toString()
-                    latLong = dataSnapshot.child("latlong").value!!.toString()
+                    latLong = "${dataSnapshot.child("latlong").value}"
 
                     PostDescription!!.text = description
                     Picasso.with(this@ClickPostGuestActivity).load(image).into(PostImage)

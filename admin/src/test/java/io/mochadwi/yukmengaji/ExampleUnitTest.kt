@@ -11,7 +11,7 @@ import org.junit.Test
 class ExampleUnitTest {
 
     @Test
-    fun addition_isCorrect() {
-        assertEquals(4, (2 + 2).toLong())
+    fun `trim all spaces`() {
+        assertEquals("alikhlas", "al ikhlas".replace("\\s".toRegex(), ""))
     }
 }
