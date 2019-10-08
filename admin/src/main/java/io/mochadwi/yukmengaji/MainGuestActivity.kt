@@ -23,6 +23,7 @@ import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.messaging.FirebaseMessaging
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
+import io.mochadwi.yukmengaji.Class.Category
 import io.mochadwi.yukmengaji.Class.Posts
 import kotlinx.android.synthetic.main.activity_main_guest.*
 
@@ -36,6 +37,8 @@ class MainGuestActivity : AppCompatActivity() {
     private var mAuth: FirebaseAuth? = null
     private var UsersRef: DatabaseReference? = null
     private var PostsRef: DatabaseReference? = null
+    private var CategoryRef: DatabaseReference? = null
+    private var categories: MutableList<Category> = mutableListOf()
 
     private lateinit var currentUserID: String
 
@@ -49,13 +52,29 @@ class MainGuestActivity : AppCompatActivity() {
         currentUserID = mAuth!!.currentUser!!.uid
         UsersRef = FirebaseDatabase.getInstance().reference.child("Users")
         PostsRef = FirebaseDatabase.getInstance().reference.child("Posts")
+        CategoryRef = FirebaseDatabase.getInstance().reference.child("Categories")
 
         UsersRef!!.keepSynced(true)
         PostsRef!!.keepSynced(true)
+        CategoryRef!!.keepSynced(true)
 
         mToolbar = findViewById<View>(R.id.main_page_toolbar) as Toolbar
         setSupportActionBar(mToolbar)
         supportActionBar!!.title = "Home"
+
+        CategoryRef?.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+                // do nothing
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                p0.children.forEach { data ->
+                    categories.add(Category(data.key?.toInt() ?: 0, data.value.toString()))
+                }
+
+                displayCategories()
+            }
+        })
 
         UsersRef!!.child(currentUserID).addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -109,6 +128,42 @@ class MainGuestActivity : AppCompatActivity() {
             })
     }
 
+    private fun displayCategories() {
+        val categoryAdapter = object : RecyclerView.Adapter<PostsViewHolder>() {
+            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostsViewHolder {
+                val item = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.all_posts_layout, parent, false)
+                val lp = ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                item.layoutParams = lp
+
+                return PostsViewHolder(item)
+            }
+
+            override fun getItemCount(): Int {
+                return categories.size
+            }
+
+            override fun onBindViewHolder(viewHolder: PostsViewHolder, position: Int) {
+                val model = Posts()
+
+                viewHolder.setCategory(model.category)
+                viewHolder.setUstadz(model.pemateri)
+                viewHolder.setFullname(model.fullname)
+                viewHolder.setTime(model.time)
+                viewHolder.setDate(model.date)
+                viewHolder.setDescription(model.description)
+            }
+        }
+
+        viewpager2.apply {
+            adapter = categoryAdapter
+        }
+        
+        TabLayoutMediator(tabs, viewpager2) { tab: TabLayout.Tab, position: Int ->
+            tab.text = "Kategori ${categories[position].name}"
+        }.attach()
+    }
     private fun DisplayAllUsersPosts() {
 
         val SortPostInDescendingOrder = PostsRef!!.orderByChild("counter")
@@ -155,12 +210,6 @@ class MainGuestActivity : AppCompatActivity() {
                 }
             }
         }
-        viewpager2.apply {
-            adapter = firebaseRecyclerAdapter
-        }
-        TabLayoutMediator(tabs, viewpager2) { tab: TabLayout.Tab, position: Int ->
-            tab.text = "Tab $position"
-        }.attach()
     }
 
     class PostsViewHolder(internal var mView: View) : RecyclerView.ViewHolder(mView) {
