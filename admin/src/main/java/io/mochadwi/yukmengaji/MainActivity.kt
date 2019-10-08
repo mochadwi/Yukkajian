@@ -134,7 +134,7 @@ class MainActivity : AppCompatActivity() {
 
                 val PostKey = getRef(position).key ?: "PostKey"
 
-                viewHolder.setCategory(model.category)
+                viewHolder.setCategory(model.kategori)
                 viewHolder.setUstadz(model.pemateri)
                 viewHolder.setFullname(model.fullname)
                 viewHolder.setTime(model.time)

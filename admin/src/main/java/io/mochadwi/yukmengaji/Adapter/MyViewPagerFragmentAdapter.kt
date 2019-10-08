@@ -8,11 +8,12 @@ import io.mochadwi.yukmengaji.PostFragment
 
 class MyViewPagerFragmentAdapter(
     fragmentActivity: FragmentActivity,
+    private val userId: String,
     private val items: List<Category>
 ) : FragmentStateAdapter(fragmentActivity) {
 
     override fun createFragment(position: Int): Fragment {
-        return PostFragment.newInstance(items[position].id)
+        return PostFragment.newInstance(userId, items[position].name)
     }
 
     override fun getItemCount(): Int {

@@ -7,7 +7,8 @@ data class Posts(
     var postimage: String = "",
     var description: String = "",
     var pemateri: String = "",
-    var category: String = "",
+    var kategori: String = "",
     var fullname: String = "",
-    var profileimage: String = ""
+    var profileimage: String = "",
+    var latlong: String = ""
 )
