@@ -23,11 +23,13 @@ import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.messaging.FirebaseMessaging
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
+import io.mochadwi.yukmengaji.Adapter.MyViewPagerFragmentAdapter
 import io.mochadwi.yukmengaji.Class.Category
 import io.mochadwi.yukmengaji.Class.Posts
+import io.mochadwi.yukmengaji.dummy.DummyContent
 import kotlinx.android.synthetic.main.activity_main_guest.*
 
-class MainGuestActivity : AppCompatActivity() {
+class MainGuestActivity : AppCompatActivity(), PostFragment.OnListFragmentInteractionListener {
     companion object {
         val TAG = this::class.java.simpleName
     }
@@ -129,37 +131,10 @@ class MainGuestActivity : AppCompatActivity() {
     }
 
     private fun displayCategories() {
-        val categoryAdapter = object : RecyclerView.Adapter<PostsViewHolder>() {
-            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostsViewHolder {
-                val item = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.all_posts_layout, parent, false)
-                val lp = ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-                item.layoutParams = lp
-
-                return PostsViewHolder(item)
-            }
-
-            override fun getItemCount(): Int {
-                return categories.size
-            }
-
-            override fun onBindViewHolder(viewHolder: PostsViewHolder, position: Int) {
-                val model = Posts()
-
-                viewHolder.setCategory(model.category)
-                viewHolder.setUstadz(model.pemateri)
-                viewHolder.setFullname(model.fullname)
-                viewHolder.setTime(model.time)
-                viewHolder.setDate(model.date)
-                viewHolder.setDescription(model.description)
-            }
-        }
-
         viewpager2.apply {
-            adapter = categoryAdapter
+            adapter = MyViewPagerFragmentAdapter(this@MainGuestActivity, categories.toList())
         }
-        
+
         TabLayoutMediator(tabs, viewpager2) { tab: TabLayout.Tab, position: Int ->
             tab.text = "Kategori ${categories[position].name}"
         }.attach()
@@ -210,6 +185,10 @@ class MainGuestActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun onListFragmentInteraction(item: DummyContent.DummyItem?) {
+        Toast.makeText(this, "${item?.content}", Toast.LENGTH_SHORT)
     }
 
     class PostsViewHolder(internal var mView: View) : RecyclerView.ViewHolder(mView) {
