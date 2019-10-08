@@ -63,7 +63,7 @@
         android:background="@drawable/post_background_edittext"
         android:ems="10"
         android:hint="Ustadz Name"
-        android:inputType="date"
+        android:inputType="textPersonName"
         android:padding="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

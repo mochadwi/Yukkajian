@@ -1,5 +1,6 @@
 package io.mochadwi.yukmengaji
 
+import android.app.Activity
 import android.app.ProgressDialog
 import android.app.TimePickerDialog
 import android.content.Intent
@@ -17,10 +18,11 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.api.model.RectangularBounds
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.AutocompleteActivity
@@ -150,6 +152,14 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
             SelectPostImage!!.setImageURI(ImageUri)
         }
 
+        if (requestCode == SHARE_SOCMED_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                Toast.makeText(this, "Succeed blasting the post", Toast.LENGTH_SHORT)
+            }
+
+            SendUserToMainActivity()
+        }
+
         if (requestCode == AUTOCOMPLETE_REQUEST_CODE && data != null) {
             if (resultCode == RESULT_OK) {
                 val place = Autocomplete.getPlaceFromIntent(data)
@@ -175,12 +185,33 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
         // Set the fields to specify which types of place data to return.
         val fields = listOf(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG)
 
-        // Start the autocomplete intent.
-        val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
-//            .setTypeFilter(TypeFilter.REGIONS)
-            .setCountry("ID")
-            .build(this)
-        startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE)
+        lateinit var latLong: LatLng
+
+        val mFusedLocation = LocationServices.getFusedLocationProviderClient(this)
+        mFusedLocation.lastLocation.addOnSuccessListener(this) { location ->
+            // Do it all with location
+            Log.d("My Current location",
+                "Lat : ${location?.latitude} Long : ${location?.longitude}")
+            // Display in Toast
+            Toast.makeText(this@PostActivity,
+                "Lat : ${location?.latitude} Long : ${location?.longitude}",
+                Toast.LENGTH_LONG).show()
+            latLong = LatLng(location?.latitude ?: 0.0, location?.latitude ?: 0.0)
+
+            LatLong = "${location?.latitude},${location?.longitude}"
+
+            val bounds = RectangularBounds.newInstance(
+                latLong,
+                latLong
+            )
+            // Start the autocomplete intent.
+            val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
+//                .setLocationRestriction(bounds)
+                .setCountry("ID")
+                .build(this)
+            startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE)
+        }
+
     }
 
     private fun ValidatePostInfo() {
@@ -310,12 +341,7 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
                         .updateChildren(postMap.toMap())
                         .addOnCompleteListener { task ->
                             if (task.isSuccessful) {
-                                shareSocmed()
                                 sendPushNotif()
-                                Toast.makeText(this@PostActivity, "Posts Update Succesfully",
-                                    Toast.LENGTH_SHORT).show()
-                                SendUserToMainActivity()
-                                loadingBar!!.dismiss()
                             } else {
 
                                 val message = task.exception!!.message
@@ -333,12 +359,20 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
     }
 
     private fun shareSocmed() {
-        val shareBody = "Here is the share kajian body"
+//        val receiver = Intent(this@PostActivity, MyReceiver::class.java)
+//        val pendingIntent = PendingIntent.getBroadcast(this@PostActivity,
+//            SHARE_SOCMED_REQUEST_CODE, receiver, PendingIntent.FLAG_UPDATE_CURRENT)
+        val shareBody = """Judul: $Description
+            |Pemateri: $Pemateri
+            |Lokasi: $LatLong
+        """.trimMargin().trimIndent()
         val sharingIntent = Intent(Intent.ACTION_SEND)
         sharingIntent.setType("text/plain")
-        sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Subject Here")
+        sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Hadiri Kajian Ini!")
         sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBody)
-        startActivity(Intent.createChooser(sharingIntent, "Berbagi ke platform berikut"))
+        startActivityForResult(Intent.createChooser(sharingIntent, "Berbagi ke platform berikut"),
+            SHARE_SOCMED_REQUEST_CODE)
+//        startActivityForResult(Intent.createChooser(sharingIntent, "Berbagi ke platform berikut", pendingIntent.intentSender))
     }
 
     private fun sendPushNotif() {
@@ -348,8 +382,8 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
         try {
             json.put("to", "/topics/" + "all")
             val notificationObj = JSONObject()
-            notificationObj.put("title", "New Kajian")
-            notificationObj.put("body", "New kajian from : ${current_user_id}")
+            notificationObj.put("title", "New Kajian: $Description")
+            notificationObj.put("body", "New kajian from: $Pemateri")
             // replace notification with data when went send data
             json.put("notification", notificationObj)
 
@@ -358,7 +392,10 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
                 Method.POST,
                 URL,
                 json,
-                Response.Listener { response -> Log.d("MUR", "onResponse: $response") },
+                Response.Listener { response ->
+                    Log.d("MUR", "onResponse: $response")
+                    shareSocmed()
+                },
                 Response.ErrorListener { error ->
                     Log.d("MUR", "onError: " + error.networkResponse)
                 }) {
@@ -373,6 +410,7 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
             mRequestQue.add(request)
         } catch (e: JSONException) {
             e.printStackTrace()
+            Log.d("MUR", "onError: " + e.localizedMessage)
         }
     }
 
@@ -395,6 +433,7 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
     }
 
     private fun SendUserToMainActivity() {
+        loadingBar!!.dismiss()
 
         val mainIntent = Intent(this@PostActivity, MainActivity::class.java)
         mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
@@ -441,10 +480,9 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
         // Maps Place Api
         private val TAG = "PostActivity"
         private val GOOGLE_API_CLIENT_ID = 0
-        private val BOUNDS_MOUNTAIN_VIEW = LatLngBounds(LatLng(37.398160, -122.180831),
-            LatLng(37.430610, -121.972090))
 
         internal val Gallery_Pick = 1
         val AUTOCOMPLETE_REQUEST_CODE = 99
+        val SHARE_SOCMED_REQUEST_CODE = 88
     }
 }
