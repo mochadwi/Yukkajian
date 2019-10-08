@@ -2,11 +2,11 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent"
     android:id="@+id/drawable_layout"
     android:layout_height="match_parent"
     android:background="#ffffff"
-    tools:context="io.mochadwi.yukmengaji.MainActivity">
+    tools:context="io.mochadwi.yukmengaji.MainGuestActivity">
 
     <include
         android:id="@+id/main_page_toolbar"
@@ -14,27 +14,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <FrameLayout
-        android:id="@+id/main_container"
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabs"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/main_page_toolbar">
+        android:layout_height="wrap_content"
+        app:tabMode="scrollable"
+        android:layout_below="@id/main_page_toolbar"/>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/all_users_post_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:listitem="@layout/all_posts_layout"
-            android:layout_marginBottom="10dp"
-            android:background="@color/white"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:id="@+id/tv_users_post_empty"
-            android:text="empty list"/>
-
-    </FrameLayout>
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewpager2"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_below="@id/tabs"
+        android:layout_height="match_parent"/>
 </RelativeLayout>

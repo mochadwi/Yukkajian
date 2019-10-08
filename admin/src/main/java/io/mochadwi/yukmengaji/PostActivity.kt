@@ -227,8 +227,7 @@ class PostActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
 //
 //            Toast.makeText(this, "Please Select post Image", Toast.LENGTH_SHORT).show()
 //        }
-        if (TextUtils.isEmpty(update_post_place.text)) {
-
+        if (TextUtils.isEmpty(update_post_place.text) && TextUtils.isEmpty(LatLong)) {
             Toast.makeText(this, "Please Set your location", Toast.LENGTH_SHORT).show()
         }
         if (TextUtils.isEmpty(Description)) {

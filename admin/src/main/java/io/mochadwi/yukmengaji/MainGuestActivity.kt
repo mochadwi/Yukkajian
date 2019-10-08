@@ -4,16 +4,19 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.iid.FirebaseInstanceId
@@ -21,13 +24,13 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 import io.mochadwi.yukmengaji.Class.Posts
+import kotlinx.android.synthetic.main.activity_main_guest.*
 
 class MainGuestActivity : AppCompatActivity() {
     companion object {
         val TAG = this::class.java.simpleName
     }
 
-    private var postList: RecyclerView? = null
     private var mToolbar: Toolbar? = null
 
     private var mAuth: FirebaseAuth? = null
@@ -52,14 +55,7 @@ class MainGuestActivity : AppCompatActivity() {
 
         mToolbar = findViewById<View>(R.id.main_page_toolbar) as Toolbar
         setSupportActionBar(mToolbar)
-        supportActionBar!!.setTitle("Home")
-
-        postList = findViewById<View>(R.id.all_users_post_list) as RecyclerView
-        postList!!.setHasFixedSize(true)
-        val linearLayoutManager = LinearLayoutManager(this)
-        linearLayoutManager.reverseLayout = true
-        linearLayoutManager.stackFromEnd = true
-        postList!!.layoutManager = linearLayoutManager
+        supportActionBar!!.title = "Home"
 
         UsersRef!!.child(currentUserID).addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -112,6 +108,7 @@ class MainGuestActivity : AppCompatActivity() {
                 Toast.makeText(baseContext, token, Toast.LENGTH_SHORT).show()
             })
     }
+
     private fun DisplayAllUsersPosts() {
 
         val SortPostInDescendingOrder = PostsRef!!.orderByChild("counter")
@@ -123,6 +120,16 @@ class MainGuestActivity : AppCompatActivity() {
             SortPostInDescendingOrder
 
         ) {
+            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostsViewHolder {
+                val item = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.all_posts_layout, parent, false)
+                val lp = ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                item.layoutParams = lp
+
+                return PostsViewHolder(item)
+            }
+
             override fun populateViewHolder(
                 viewHolder: PostsViewHolder,
                 model: Posts,
@@ -148,8 +155,12 @@ class MainGuestActivity : AppCompatActivity() {
                 }
             }
         }
-        postList!!.adapter = firebaseRecyclerAdapter
-        findViewById<TextView>(R.id.tv_users_post_empty).visibility = View.GONE
+        viewpager2.apply {
+            adapter = firebaseRecyclerAdapter
+        }
+        TabLayoutMediator(tabs, viewpager2) { tab: TabLayout.Tab, position: Int ->
+            tab.text = "Tab $position"
+        }.attach()
     }
 
     class PostsViewHolder(internal var mView: View) : RecyclerView.ViewHolder(mView) {
