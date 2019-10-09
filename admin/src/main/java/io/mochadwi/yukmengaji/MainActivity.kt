@@ -1,5 +1,6 @@
 package io.mochadwi.yukmengaji
 
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -12,7 +13,6 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -21,11 +21,13 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
+import io.mochadwi.yukmengaji.Adapter.NotifyingLinearLayoutManager
 import io.mochadwi.yukmengaji.Class.Posts
 import io.mochadwi.yukmengaji.Menu.SettingsActivity
 
 class MainActivity : AppCompatActivity() {
 
+    private var loadingBar: ProgressDialog? = null
     private var navigationView: NavigationView? = null
     private var drawerLayout: DrawerLayout? = null
     private var actionBarDrawerToggle: ActionBarDrawerToggle? = null
@@ -46,6 +48,13 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        loadingBar = ProgressDialog(this).apply {
+            setTitle("Memuat Kajian")
+            setMessage("Mohon Tunggu...")
+            setCanceledOnTouchOutside(true)
+            show()
+        }
 
         mAuth = FirebaseAuth.getInstance()
         currentUserID = mAuth!!.currentUser!!.uid
@@ -68,11 +77,6 @@ class MainActivity : AppCompatActivity() {
         navigationView = findViewById(R.id.navigation_view)
 
         postList = findViewById<View>(R.id.all_users_post_list) as RecyclerView
-        postList!!.setHasFixedSize(true)
-        val linearLayoutManager = LinearLayoutManager(this)
-        linearLayoutManager.reverseLayout = true
-        linearLayoutManager.stackFromEnd = true
-        postList!!.layoutManager = linearLayoutManager
 
         val navView = navigationView!!.inflateHeaderView(R.layout.navigation_header)
         NavProfileImage = navView.findViewById<View>(R.id.nav_profile_image) as CircleImageView
@@ -101,6 +105,15 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
+        PostsRef!!.child(currentUserID).addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+            }
+        })
+
         navigationView!!.setNavigationItemSelectedListener { item ->
             UserMenuSelector(item)
             false
@@ -110,7 +123,6 @@ class MainActivity : AppCompatActivity() {
             val newPostIntent = Intent(this@MainActivity, PostActivity::class.java)
             startActivity(newPostIntent)
         }
-
 
         DisplayAllUsersPosts()
     }
@@ -151,7 +163,20 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-        postList!!.adapter = firebaseRecyclerAdapter
+        postList?.apply {
+            setHasFixedSize(true)
+            layoutManager = NotifyingLinearLayoutManager(this@MainActivity).apply {
+                reverseLayout = true
+                stackFromEnd = true
+                setOnLayoutCompleteListener(object :
+                    NotifyingLinearLayoutManager.OnLayoutCompleteListener {
+                    override fun onLayoutComplete() {
+                        if (isLastItemCompletelyVisible()) loadingBar?.dismiss()
+                    }
+                })
+            }
+            adapter = firebaseRecyclerAdapter
+        }
         findViewById<TextView>(R.id.tv_users_post_empty).visibility = View.GONE
     }
 

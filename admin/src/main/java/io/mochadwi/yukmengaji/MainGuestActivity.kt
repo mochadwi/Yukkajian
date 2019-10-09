@@ -1,5 +1,6 @@
 package io.mochadwi.yukmengaji
 
+import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -23,6 +24,7 @@ class MainGuestActivity : AppCompatActivity(), PostFragment.OnListFragmentIntera
         val TAG = this::class.java.simpleName
     }
 
+    private var loadingBar: ProgressDialog? = null
     private var mToolbar: Toolbar? = null
 
     private var mAuth: FirebaseAuth? = null
@@ -35,6 +37,12 @@ class MainGuestActivity : AppCompatActivity(), PostFragment.OnListFragmentIntera
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_guest)
 
+        loadingBar = ProgressDialog(this).apply {
+            setTitle("Memuat Kajian")
+            setMessage("Mohon Tunggu...")
+            setCanceledOnTouchOutside(true)
+            show()
+        }
         cloudMessaging()
 
         mAuth = FirebaseAuth.getInstance()
@@ -96,6 +104,10 @@ class MainGuestActivity : AppCompatActivity(), PostFragment.OnListFragmentIntera
 
         TabLayoutMediator(tabs, viewpager2) { tab: TabLayout.Tab, position: Int ->
             tab.text = "Kategori ${categories[position].name}"
+
+            if (position == categories.size - 1) {
+                loadingBar?.dismiss()
+            }
         }.attach()
     }
 
