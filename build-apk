@@ -1,0 +1,20 @@
+#!/usr/bin/env sh
+
+##############################################################################
+##
+##  Gradle run APK to device script for UN*X
+##
+##############################################################################
+echo "Building and installing admin-apk to connected device/emulator"
+./gradlew :admin:assembleAdminDebug
+adb push /Admins/mochamadiqbaldwicahyo/Documents/others/stmikim/Yukkajian/admin/build/outputs/apk/admin/debug/admin-admin-debug.apk /data/local/tmp/io.mochadwi.yukmengaji.admin
+adb shell pm install -t -r "/data/local/tmp/io.mochadwi.yukmengaji"
+adb shell am start -n "io.mochadwi.yukmengaji/io.mochadwi.yukmengaji.LoginActivity" -a android.intent.action.MAIN -c android.intent.category.LAUNCHER
+echo "Done. Check your device if it is installed"
+
+echo "Building and installing user-apk to connected device/emulator"
+./gradlew :admin:assembleUserDebug
+adb push /Users/mochamadiqbaldwicahyo/Documents/others/stmikim/Yukkajian/admin/build/outputs/apk/user/debug/admin-user-debug.apk /data/local/tmp/io.mochadwi.yukmengaji.user
+adb shell pm install -t -r "/data/local/tmp/io.mochadwi.yukmengaji.user"
+adb shell am start -n "io.mochadwi.yukmengaji.user/io.mochadwi.yukmengaji.LoginActivity" -a android.intent.action.MAIN -c android.intent.category.LAUNCHER
+echo "Done. Check your device if it is installed"

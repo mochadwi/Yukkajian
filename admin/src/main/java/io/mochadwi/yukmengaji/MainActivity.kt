@@ -157,7 +157,7 @@ class MainActivity : AppCompatActivity() {
 
                 viewHolder.mView.setOnClickListener {
                     val clickPostIntent = Intent(this@MainActivity,
-                        ClickPostGuestActivity::class.java)
+                        ClickPostActivity::class.java)
                     clickPostIntent.putExtra("PostKey", PostKey)
                     startActivity(clickPostIntent)
                 }
